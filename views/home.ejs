@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script src="https://cdn.socket.io/socket.io-3.0.1.min.js">
+        </script>
+    </head>
+    <body>
+        <h1>Hello to our socket server</h1>
+        <script>
+            const socket = io('http://localhost:3000');
+            let txt = '';
+            socket.on('message', data => {
+                for (x in data[0]) {
+                    txt += data[0][x] + " ";
+                };
+                document.querySelector('h1').innerText = txt;
+            });
+            socket.on('connection');
+        </script>
+    </body>
+</html>
