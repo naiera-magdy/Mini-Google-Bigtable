@@ -10,6 +10,7 @@
             const socket = io('http://localhost:3000');
             let txt = '';
             socket.on('message', data => {
+                console.log(data);
                 for (x in data[0]) {
                     txt += data[0][x] + " ";
                 };
