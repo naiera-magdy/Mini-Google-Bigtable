@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 app.set('view engine', 'ejs');
 
 app.get('/home', async (req, res) => {
-  res.render('home');
+  res.render('index');
   // res.render('home');
 });
 

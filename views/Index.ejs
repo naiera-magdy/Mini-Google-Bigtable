@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Socket IO CDN -->
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js"
+    integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh"
+    crossorigin="anonymous"></script>
+    <title>Client App</title>
+</head>
+
+<body id="main"
+    style="display: flex; flex-direction: column;justify-content: center; align-items: center; min-height: 100vh; margin: 20px;">
+    <h1>OS Project Client App</h1>
+
+
+    <div class="btn-group btn-group-toggle mb-3" data-toggle="buttons" id="mainChoice">
+        <label class="btn btn-secondary active">
+            <input type="radio" name="options" autocomplete="off" value="setrow" checked> Set Row
+        </label>
+        <label class="btn btn-secondary">
+            <input type="radio" name="options" autocomplete="off" value="deletecell"> Delete Cells
+        </label>
+        <label class="btn btn-secondary">
+            <input type="radio" name="options" autocomplete="off" value="deleterow"> Delete Rows
+        </label>
+        <label class="btn btn-secondary">
+            <input type="radio" name="options" autocomplete="off" value="addrow"> Add Row
+        </label>
+        <label class="btn btn-secondary">
+            <input type="radio" name="options" autocomplete="off" value="readrow"> Read Rows
+        </label>
+    </div>
+
+    <form class="justify-content-center mb-5">
+
+        <!-- Set Row -->
+        <div id="setrow" style="display: flex; flex-direction: column;justify-content: center; align-items: center;">
+            <h3>Set Row</h3>
+            <div id="setrowinputs" class="form-group" style="width:300px">
+                <input type="text" class="form-control" id="setrowkey" placeholder="Please Enter Row Key">
+
+                <div class="form-row mt-2">
+                    <div class="col">
+                        <input type="text" class="form-control column" placeholder="Column">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control value" placeholder="Value">
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-secondary mt-3" id="setrowaddcolumn">Add Column</button>
+
+        </div>
+
+        <!-- Delete Cells -->
+        <div id="deletecell"
+            style="display: none; flex-direction: column;justify-content: center; align-items: center;">
+            <h3>Delete cells</h3>
+
+            <div id="deletecellinputs" class="form-group" style="width:300px">
+                <input type="text" class="form-control" id="deletecellkey" placeholder="Please Enter Row Key">
+                <input type="text" class="form-control mt-2 column" placeholder="Column">
+            </div>
+            <button class="btn btn-secondary mt-3" id="deletecelladdcolumn">Add Column</button>
+
+        </div>
+
+        <!-- Delete Rows -->
+        <div id="deleterow" style="display: none; flex-direction: column;justify-content: center; align-items: center;">
+            <h3>Delete Rows</h3>
+
+            <div id="deleterowinputs" class="form-group" style="width:300px">
+                <input type="text" class="form-control rowkey" placeholder="Row Key">
+            </div>
+            <button class="btn btn-secondary mt-3" id="deleterowaddcolumn">Add Row</button>
+        </div>
+
+        <!-- Add Row -->
+        <div id="addrow" style="display: none; flex-direction: column;justify-content: center; align-items: center;">
+            <h3>Add Row</h3>
+
+            <div id="addrowinputs" class="form-group" style="width:300px">
+                <input type="text" class="form-control" id="addrowkey" placeholder="Please Enter Row Key">
+                <div class="form-row mt-2">
+                    <div class="col">
+                        <input type="text" class="form-control column" placeholder="Column">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control value" placeholder="Value">
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-secondary mt-3" id="addrowaddcolumn">Add Column</button>
+
+        </div>
+
+        <!-- Read Rows -->
+        <div id="readrow" style="display: none; flex-direction: column;justify-content: center; align-items: center;">
+            <h3>Read Rows</h3>
+
+            <div id="readrowinputs" class="form-group" style="width:300px">
+                <input type="text" class="form-control rowkey" placeholder="Row Key">
+            </div>
+            <button class="btn btn-secondary mt-3" id="readrowaddcolumn">Add Row</button>
+        </div>
+
+    </form>
+    <button id="submitbtn" class="btn btn-primary">Submit Query</button>
+
+
+
+
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <!-- <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script> -->
+
+    <!-- JavaScript Files -->
+    <script>
+         const TabletServer1 = io('http://localhost:3000');
+//   const TabletServer2 = io('http://localhost:3001');
+  // const MasterServer = io('http://localhost:3002');
+
+  const Tabletcache = {};
+
+  // Socket events for Master
+  //   MasterServer.on('newcache', data => {
+  //     Tabletcache = data;
+  //   });
+
+  // Socket events for TabletServer 1
+  TabletServer1.on('readRows', data => {
+    console.log(data);
+  });
+  TabletServer1.on('setCells', data => {
+    console.log(data);
+  });
+  TabletServer1.on('deleteCells', data => {
+    console.log(data);
+  });
+  TabletServer1.on('deleteRow', data => {
+    console.log(data);
+  });
+  TabletServer1.on('addRow', data => {
+    console.log(data);
+  });
+
+  // Socket events for TabletServer 2
+//   TabletServer2.on('readRows', data => {
+//     console.log(data);
+//   });
+//   TabletServer2.on('setCells', data => {
+//     console.log(data);
+//   });
+//   TabletServer2.on('deleteCells', data => {
+//     console.log(data);
+//   });
+//   TabletServer2.on('deleteRow', data => {
+//     console.log(data);
+//   });
+//   TabletServer2.on('addRow', data => {
+//     console.log(data);
+//   });
+
+  // Radio Button Change html dynamically
+  $('#mainChoice').change(function() {
+    let radioValue = $("input[name='options']:checked").val();
+
+    $('#setrow').css('display', 'none');
+    $('#deletecell').css('display', 'none');
+    $('#deleterow').css('display', 'none');
+    $('#addrow').css('display', 'none');
+    $('#readrow').css('display', 'none');
+
+    $(`#${radioValue}`).css('display', 'flex');
+  });
+
+  $('#setrowaddcolumn').click(function(e) {
+    e.preventDefault();
+    $('#setrowinputs').append(
+      `<div class="form-row mt-2">
+            <div class="col">
+                <input type="text" class="form-control column" placeholder="Column">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control value" placeholder="Value">
+            </div>
+        </div>`
+    );
+  });
+
+  $('#deletecelladdcolumn').click(function(e) {
+    e.preventDefault();
+    $('#deletecellinputs').append(
+      `<input type="text" class="form-control mt-2 column" placeholder="Column">`
+    );
+  });
+
+  $('#deleterowaddcolumn').click(function(e) {
+    e.preventDefault();
+    $('#deleterowinputs').append(
+      `<input type="text" class="form-control mt-2 rowkey" placeholder="Row Key">`
+    );
+  });
+
+  $('#addrowaddcolumn').click(function(e) {
+    e.preventDefault();
+    $('#addrowinputs').append(
+      `<div class="form-row mt-2">
+                <div class="col">
+                    <input type="text" class="form-control column" placeholder="Column">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control value" placeholder="Value">
+                </div>
+            </div>`
+    );
+  });
+
+  $('#readrowaddcolumn').click(function(e) {
+    e.preventDefault();
+    $('#readrowinputs').append(
+      `<input type="text" class="form-control mt-2 rowkey" placeholder="Row Key">`
+    );
+  });
+
+  // Submit button get the values of the payload
+  $('#submitbtn').click(function(e) {
+    e.preventDefault();
+    let radioValue = $("input[name='options']:checked").val();
+    let objectToSend;
+
+    // Set Rows
+    if (radioValue === 'setrow') {
+      let rowkey = $('#setrowkey').val();
+      let columnarray = [];
+      $('#setrow .column').each(function(el) {
+        columnarray.push($(this).val());
+      });
+      let valarray = [];
+      $('#setrow .value').each(function(el) {
+        valarray.push($(this).val());
+      });
+
+      objectToSend = {};
+      objectToSend['show_id'] = rowkey;
+      columnarray.forEach((key, i) => (objectToSend[key] = valarray[i]));
+
+    //   let socket =
+    //     rowkey >= Tabletcache[0].start && rowkey <= Tabletcache[0].end
+    //       ? TabletServer1
+    //       : TabletServer2;
+    //   socket.emit('show:Set', objectToSend);
+      TabletServer1.emit('show:Set', objectToSend);
+    }
+    // Delete Cells
+    else if (radioValue === 'deletecell') {
+      let rowkey = $('#deletecellkey').val();
+      let columnarray = [];
+      $('#deletecell .column').each(function(el) {
+        columnarray.push($(this).val());
+      });
+
+      objectToSend = {};
+      objectToSend['show_id'] = rowkey;
+      objectToSend['fields'] = [...columnarray];
+
+    //   let socket =
+    //     rowkey >= Tabletcache[0].start && rowkey <= Tabletcache[0].end
+    //       ? TabletServer1
+    //       : TabletServer2;
+    //   socket.emit('show:DeleteCells', objectToSend);
+    TabletServer1.emit('show:DeleteCells', objectToSend);
+    }
+    // Delete Rows
+    else if (radioValue === 'deleterow') {
+      let tabletArray1 = [],
+        tabletArray2 = [];
+      $('#deleterow .rowkey').each(function(el) {
+        tabletArray1.push($(this).val());
+        // if (
+        //   $(this).val() >= Tabletcache[0].start &&
+        //   rowkey <= Tabletcache[0].end
+        // ) {
+        //   tabletArray1.push($(this).val());
+        // } else tabletArray2.push($(this).val());
+      });
+
+      objectToSend = [...tabletArray1, ...tabletArray2];
+
+      if (tabletArray1.length)
+        TabletServer1.emit('show:DeleteRow', tabletArray1);
+    //   if (tabletArray2.length())
+    //     TabletServer2.emit('show:DeleteRow', tabletArray2);
+    }
+    // Add Row
+    else if (radioValue === 'addrow') {
+      let rowkey = $('#addrowkey').val();
+      let columnarray = [];
+      $('#addrow .column').each(function(el) {
+        columnarray.push($(this).val());
+      });
+      let valarray = [];
+      $('#addrow .value').each(function(el) {
+        valarray.push($(this).val());
+      });
+
+      objectToSend = {};
+      objectToSend['show_id'] = rowkey;
+      columnarray.forEach((key, i) => (objectToSend[key] = valarray[i]));
+
+    //   let socket =
+    //     rowkey >= Tabletcache[0].start && rowkey <= Tabletcache[0].end
+    //       ? TabletServer1
+    //       : TabletServer2;
+    //   socket.emit('show:AddRow', objectToSend);
+    TabletServer1.emit('show:AddRow', objectToSend);
+    }
+    // Read Rows
+    else if (radioValue === 'readrow') {
+      let tabletArray1 = [],
+        tabletArray2 = [];
+      $('#readrow .rowkey').each(function(el) {
+        tabletArray1.push($(this).val());
+        // if (
+        //   $(this).val() >= Tabletcache[0].start &&
+        //   rowkey <= Tabletcache[0].end
+        // ) {
+        //   tabletArray1.push($(this).val());
+        // } else tabletArray2.push($(this).val());
+      });
+
+      objectToSend = [...tabletArray1, ...tabletArray2];
+
+      if (tabletArray1.length)
+        TabletServer1.emit('show:ReadRows', tabletArray1);
+    //   if (tabletArray2.length())
+    //     TabletServer2.emit('show:ReadRows', tabletArray2);
+    }
+
+    $('#main').html(
+      `${JSON.stringify(
+        objectToSend
+      )} <div id="response"> </div> <button class="btn btn-primary mt-3" onclick="window.location.reload(true)">Restart</button>`
+    );
+  });
+    </script>
+
+
+</body>
+
+</html>
