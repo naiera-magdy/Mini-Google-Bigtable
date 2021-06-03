@@ -9,14 +9,15 @@
         <script>
             const socket = io('http://localhost:3000');
             let txt = '';
-            socket.on('message', data => {
+            socket.on('readRows', data => {
                 console.log(data);
                 for (x in data[0]) {
                     txt += data[0][x] + " ";
                 };
                 document.querySelector('h1').innerText = txt;
             });
-            socket.on('connection');
+            // socket.on('connection');
+            socket.emit('show:ReadRows', ['s1', 's2', 's3']);
         </script>
     </body>
 </html>
