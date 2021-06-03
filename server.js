@@ -3,15 +3,13 @@ const dotenv = require('dotenv');
 const http = require('http');
 const socket = require('socket.io');
 
+const { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } = require('constants');
 const app = require('./app');
 const Show = require('./models/showModel');
 
 dotenv.config({ path: './config.env' });
 
-const DB = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
-);
+const DB = process.env.DATABASE;
 
 mongoose
   .connect(DB, {
@@ -34,22 +32,79 @@ server.listen(port, () => {
 //////////////// LOGIC ////////////////
 
 const NUMBER_OF_TABLETS = 4;
-const tabletsData = [];
+const tabletServersMetaData = [];
+const tabletServersData = [[], [], [], []];
+const allTabletsData = [];
+const alphabets = [
+  'A',
+  'B',
+  'C',
+  'D',
+  'E',
+  'F',
+  'G',
+  'H',
+  'I',
+  'J',
+  'K',
+  'L',
+  'M',
+  'N',
+  'O',
+  'P',
+  'Q',
+  'R',
+  'S',
+  'T',
+  'U',
+  'V',
+  'W',
+  'X',
+  'Y',
+  'Z'
+];
 
 const send = async () => {
-  const data = await Show.find({}).sort('show_id');
+  const data = await Show.find({}).sort('title');
 
-  const tabletServerPortion = Math.round(data.length / NUMBER_OF_TABLETS);
-
-  for (let i = 0; i < NUMBER_OF_TABLETS; i++) {
-    tabletsData.push(
-      data.slice(i * tabletServerPortion, (i + 1) * tabletServerPortion)
+  let totalLengthMovies = 0;
+  for (let i = 0; i < alphabets.length; i++) {
+    allTabletsData.push(
+      data.filter(x => x.title[0].toUpperCase() === alphabets[i])
     );
+    totalLengthMovies += allTabletsData[i].length;
+  }
+  console.log(totalLengthMovies);
+
+  let alphabetIndex = 0;
+  for (let i = 0; i < NUMBER_OF_TABLETS; i++) {
+    let commulativeSum = 0;
+    const start = alphabets[alphabetIndex];
+    while (
+      commulativeSum < totalLengthMovies / (NUMBER_OF_TABLETS + 1) &&
+      alphabetIndex < 26
+    ) {
+      commulativeSum += allTabletsData[alphabetIndex].length;
+      tabletServersData[i].push(...allTabletsData[alphabetIndex]);
+      alphabetIndex++;
+    }
+    const end = alphabets[alphabetIndex - 1];
+
+    tabletServersMetaData.push({
+      Start: start,
+      End: end
+    });
   }
 
-  console.log(tabletServerPortion);
+  while (alphabetIndex !== 26) {
+    tabletServersData[3].push(...allTabletsData[alphabetIndex]);
 
-  io.emit('message', tabletsData);
+    alphabetIndex++;
+  }
+
+  tabletServersMetaData[3].End = 'Z';
+
+  io.emit('message', tabletServersData);
 };
 
 io.on('connection', soc => {
