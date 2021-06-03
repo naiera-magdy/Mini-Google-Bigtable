@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const showSchema = new mongoose.Schema({
   show_id: {
-    type: String,
+    type: Number,
     required: [true, `The show must have id`],
     unique: [true, 'The show id must be unique']
   },

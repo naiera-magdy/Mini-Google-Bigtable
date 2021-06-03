@@ -37,7 +37,7 @@ const NUMBER_OF_TABLETS = 4;
 const tabletsData = [];
 
 const send = async () => {
-  const data = await Show.find({}).sort('-release_year');
+  const data = await Show.find({}).sort('show_id');
 
   const tabletServerPortion = Math.round(data.length / NUMBER_OF_TABLETS);
 

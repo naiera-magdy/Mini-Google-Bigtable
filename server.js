@@ -31,9 +31,25 @@ server.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
 
+//////////////// LOGIC ////////////////
+
+const NUMBER_OF_TABLETS = 4;
+const tabletsData = [];
+
 const send = async () => {
-  const data = await Show.find({ release_year: '2020' });
-  io.emit('message', data);
+  const data = await Show.find({}).sort('show_id');
+
+  const tabletServerPortion = Math.round(data.length / NUMBER_OF_TABLETS);
+
+  for (let i = 0; i < NUMBER_OF_TABLETS; i++) {
+    tabletsData.push(
+      data.slice(i * tabletServerPortion, (i + 1) * tabletServerPortion)
+    );
+  }
+
+  console.log(tabletServerPortion);
+
+  io.emit('message', tabletsData);
 };
 
 io.on('connection', soc => {
