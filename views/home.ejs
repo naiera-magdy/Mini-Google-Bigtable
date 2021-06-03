@@ -16,8 +16,54 @@
                 };
                 document.querySelector('h1').innerText = txt;
             });
+            socket.on('setCells', data => {
+                console.log(data);
+            });
+            socket.on('deleteCells', data => {
+                console.log(data);
+            });
+            socket.on('deleteRow', data => {
+                console.log(data);
+            });
+            socket.on('addRow', data => {
+                console.log(data);
+            });
             // socket.on('connection');
+
             socket.emit('show:ReadRows', ['s1', 's2', 's3']);
+            
+            // socket.emit('show:Set', {
+            //     show_id: 's2',
+            //     type: "Movie",
+            //     title: "7:19",
+            //     director: "Jorge Michel Grau",
+            //     cast: "Demián Bichir, Héctor Bonilla, Oscar Serrano, Azalia Ortiz, Octavio Michel, Carmen Beato",
+            //     country: "Mexico",
+            //     date_added: "December 23, 2016",
+            //     release_year: "2016",
+            //     rating: "TV-MA",
+            //     duration: "93 min",
+            //     listed_in: "Dramas, International Movies",
+            //     description: "After a devastating earthquake hits Mexico City, trapped survivors from all walks of life wait to be rescued while trying desperately to stay alive."
+            // });
+            // socket.emit('show:DeleteRow', ['s2']);
+
+            // socket.emit('show:AddRow', {
+            //     show_id: 's2',
+            //     type: "Movie",
+            //     title: "7:19",
+            //     director: "Jorge Michel Grau",
+            //     cast: "Demián Bichir, Héctor Bonilla, Oscar Serrano, Azalia Ortiz, Octavio Michel, Carmen Beato",
+            //     country: "Mexico",
+            //     date_added: "December 23, 2016",
+            //     release_year: "2016",
+            //     rating: "TV-MA",
+            //     duration: "93 min",
+            //     listed_in: "Dramas, International Movies",
+            //     description: "After a devastating earthquake hits Mexico City, trapped survivors from all walks of life wait to be rescued while trying desperately to stay alive."
+            // });
+
+            // socket.emit('show:DeleteCells', {show_id: 's2', fields: ["director", "release_year", "type", "cast"]});
         </script>
     </body>
 </html>
