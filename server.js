@@ -33,14 +33,10 @@ io.on('connection', async soc => {
   console.log(`User connected from socket id = ${soc.id}`);
 
   io.emit(
-    'message',
-    await master.handleServerRequsets({
-      insert: [],
-      delete: [],
-      update: []
-    })
+    'message'
+    // await master.handleServerRequsets();
   );
-  // const init = await master.initialize();
+  const init = await master.initialize();
   // io.emit('message', init.tabletServersMetaData);
 });
 

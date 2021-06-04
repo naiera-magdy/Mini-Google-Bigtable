@@ -72,37 +72,38 @@ exports.initialize = async function() {
 
   tabletServersMetaData[3].End = 'Z';
 
-  console.log(data[0]);
-
   return { tabletServersData, tabletServersMetaData };
 };
 
 exports.handleServerRequsets = async function(data) {
   // Delete operation
-  for (const showID of data.delete) {
-    try {
-      const res = await Show.findOneAndRemove({ show_id: showID });
-    } catch (err) {
-      console.log(err);
-    }
 
-    // Insert Operation
-    for (const show of data.update) {
-      console.log(show);
-      try {
-        const res = await Show.updateMany({ show_id: 's3' }, show);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    // Add Operation
-    for (const show of data.insert) {
-      try {
-        const res = await Show.create(show);
-      } catch (err) {
-        console.log(err);
-      }
+  for (const show of data) {
+    switch (show.type) {
+      case 'delete':
+        try {
+          const res = await Show.findOneAndRemove({ show_id: show.show_id });
+        } catch (err) {
+          console.log(err);
+        }
+        break;
+      case 'update':
+        try {
+          const res = await Show.updateOne(
+            { show_id: show.show_id },
+            show.data
+          );
+        } catch (err) {
+          console.log(err);
+        }
+        break;
+      default:
+        try {
+          const res = await Show.create(show.data);
+        } catch (err) {
+          console.log(err);
+        }
+        break;
     }
   }
 };
