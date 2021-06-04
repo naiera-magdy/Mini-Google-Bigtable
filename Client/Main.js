@@ -6,7 +6,10 @@ $(document).ready(function () {
     //   const TabletServer2 = io('http://localhost:3001');
     //   const MasterServer = io('http://localhost:3002');
 
-    const Tabletcache = {};
+    const Tabletcache = [{ Start: 'A', End: 'D' },
+    { Start: 'E', End: 'K' },
+    { Start: 'L', End: 'P' },
+    { Start: 'Q', End: 'Z' }];
 
     // Socket events for Master
     //   MasterServer.on('newcache', data => {
@@ -132,7 +135,7 @@ $(document).ready(function () {
             columnarray.forEach((key, i) => (objectToSend[key] = valarray[i]));
 
             //   let socket =
-            //     rowkey >= Tabletcache[0].start && rowkey <= Tabletcache[0].end
+            //     rowkey[0] >= Tabletcache[0].Start && rowkey[0] <= Tabletcache[1].End
             //       ? TabletServer1
             //       : TabletServer2;
             //   socket.emit('show:Set', objectToSend);
@@ -151,7 +154,7 @@ $(document).ready(function () {
             objectToSend['fields'] = [...columnarray];
 
             //   let socket =
-            //     rowkey >= Tabletcache[0].start && rowkey <= Tabletcache[0].end
+            //     rowkey[0] >= Tabletcache[0].Start && rowkey[0] <= Tabletcache[1].End
             //       ? TabletServer1
             //       : TabletServer2;
             //   socket.emit('show:DeleteCells', objectToSend);
@@ -164,8 +167,8 @@ $(document).ready(function () {
             $('#deleterow .rowkey').each(function (el) {
                 tabletArray1.push($(this).val());
                 // if (
-                //   $(this).val() >= Tabletcache[0].start &&
-                //   rowkey <= Tabletcache[0].end
+                //   $(this).val()[0] >= Tabletcache[0].Start &&
+                //   $(this).val()[0] <= Tabletcache[1].End
                 // ) {
                 //   tabletArray1.push($(this).val());
                 // } else tabletArray2.push($(this).val());
@@ -195,7 +198,7 @@ $(document).ready(function () {
             columnarray.forEach((key, i) => (objectToSend[key] = valarray[i]));
 
             //   let socket =
-            //     rowkey >= Tabletcache[0].start && rowkey <= Tabletcache[0].end
+            //     rowkey[0] >= Tabletcache[0].Start && rowkey[0] <= Tabletcache[1].End
             //       ? TabletServer1
             //       : TabletServer2;
             //   socket.emit('show:AddRow', objectToSend);
@@ -208,8 +211,8 @@ $(document).ready(function () {
             $('#readrow .rowkey').each(function (el) {
                 tabletArray1.push($(this).val());
                 // if (
-                //   $(this).val() >= Tabletcache[0].start &&
-                //   rowkey <= Tabletcache[0].end
+                //   $(this).val()[0] >= Tabletcache[0].Start &&
+                //   $(this).val()[0] <= Tabletcache[1].End
                 // ) {
                 //   tabletArray1.push($(this).val());
                 // } else tabletArray2.push($(this).val());
