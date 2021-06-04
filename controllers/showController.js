@@ -1,5 +1,11 @@
 const Show = require('../models/showModel');
 
+let changelog = {
+  insert : [],
+  update : [],
+  delete : []
+}
+
 exports.setCells = async function(data) {
   const socket = this;
   try {
@@ -8,6 +14,7 @@ exports.setCells = async function(data) {
     delete data['show_id'];
     // console.log(data);
     const res = await Show.updateOne({ show_id: id }, data);
+    changelog.update.push(id);
     socket.emit('setCells', res);
   } catch (err) {
     console.log(err);
@@ -29,6 +36,7 @@ exports.deleteCells = async function(data) {
     // console.log(fields);
 
     const res = await Show.updateOne({ show_id: id }, { $unset: fields });
+    changelog.update.push(id);
     socket.emit('deleteCells', res);
   } catch (err) {
     console.log(err);
@@ -40,6 +48,7 @@ exports.deleteRow = async function(ids) {
   const socket = this;
   try {
     const res = await Show.deleteMany({ show_id: ids });
+    changelog.delete.push(...ids);
     socket.emit('deleteRow', res);
   } catch (err) {
     console.log(err);
@@ -51,6 +60,7 @@ exports.addRow = async function(data) {
   const socket = this;
   try {
     const res = await Show.create(data);
+    changelog.insert.push(res.show_id);
     socket.emit('addRow', res);
   } catch (err) {
     console.log(err);
@@ -71,3 +81,5 @@ exports.readRow = async function(id) {
     socket.emit('setCells', "Error can't complete the query");
   }
 };
+
+module.exports.changelog = changelog;
