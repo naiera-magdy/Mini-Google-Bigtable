@@ -1,10 +1,11 @@
 const Show = require('../models/showModel');
 
+// eslint-disable-next-line prefer-const
 let changelog = {
-  insert : [],
-  update : [],
-  delete : []
-}
+  insert: [],
+  update: [],
+  delete: []
+};
 
 exports.setCells = async function(data) {
   const socket = this;

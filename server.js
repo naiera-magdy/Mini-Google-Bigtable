@@ -5,6 +5,7 @@ const socket = require('socket.io');
 
 const app = require('./app');
 const showController = require('./controllers/showController');
+const tabletMasterController = require('./controllers/tabletMasterController');
 
 dotenv.config({ path: './config.env' });
 
@@ -32,14 +33,11 @@ server.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
 
-// const send = async () => {
-//   const data = await Show.find({ release_year: '2020' });
-//   io.emit('message', data);
-// };
-
 io.on('connection', soc => {
+  // console.log(soc.request._query);
+  // soc.emit('metadata', 'Hello from master');
+
   console.log(`User connected from socket id = ${soc.id}`);
-  // send();
   soc.on('show:Set', showController.setCells);
   soc.on('show:DeleteCells', showController.deleteCells);
   soc.on('show:DeleteRow', showController.deleteRow);
@@ -54,3 +52,5 @@ process.on('unhandledRejection', err => {
     process.exit(1);
   });
 });
+
+tabletMasterController.connectMaster();
