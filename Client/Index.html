@@ -16,107 +16,122 @@
     <title>Client App</title>
 </head>
 
-<body id="main"
+<body
     style="display: flex; flex-direction: column;justify-content: center; align-items: center; min-height: 100vh; margin: 20px;">
-    <h1>OS Project Client App</h1>
+
+    <div id="main"
+        style="display: flex; flex-direction: column;justify-content: center; align-items: center; min-height: 100vh; margin: 20px;">
+        >
+        <h1>OS Project Client App</h1>
 
 
-    <div class="btn-group btn-group-toggle mb-3" data-toggle="buttons" id="mainChoice">
-        <label class="btn btn-secondary active">
-            <input type="radio" name="options" autocomplete="off" value="setrow" checked> Set Row
-        </label>
-        <label class="btn btn-secondary">
-            <input type="radio" name="options" autocomplete="off" value="deletecell"> Delete Cells
-        </label>
-        <label class="btn btn-secondary">
-            <input type="radio" name="options" autocomplete="off" value="deleterow"> Delete Rows
-        </label>
-        <label class="btn btn-secondary">
-            <input type="radio" name="options" autocomplete="off" value="addrow"> Add Row
-        </label>
-        <label class="btn btn-secondary">
-            <input type="radio" name="options" autocomplete="off" value="readrow"> Read Rows
-        </label>
+        <div class="btn-group btn-group-toggle mb-3" data-toggle="buttons" id="mainChoice">
+            <label class="btn btn-secondary active">
+                <input type="radio" name="options" autocomplete="off" value="setrow" checked> Set Row
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="options" autocomplete="off" value="deletecell"> Delete Cells
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="options" autocomplete="off" value="deleterow"> Delete Rows
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="options" autocomplete="off" value="addrow"> Add Row
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="options" autocomplete="off" value="readrow"> Read Rows
+            </label>
+        </div>
+
+        <form class="justify-content-center mb-5">
+
+            <!-- Set Row -->
+            <div id="setrow"
+                style="display: flex; flex-direction: column;justify-content: center; align-items: center;">
+                <h3>Set Row</h3>
+                <div id="setrowinputs" class="form-group" style="width:300px">
+                    <input type="text" class="form-control" id="setrowkey" placeholder="Please Enter Row Key">
+
+                    <div class="form-row mt-2">
+                        <div class="col">
+                            <input type="text" class="form-control column" placeholder="Column">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control value" placeholder="Value">
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-secondary mt-3" id="setrowaddcolumn">Add Column</button>
+
+            </div>
+
+            <!-- Delete Cells -->
+            <div id="deletecell"
+                style="display: none; flex-direction: column;justify-content: center; align-items: center;">
+                <h3>Delete cells</h3>
+
+                <div id="deletecellinputs" class="form-group" style="width:300px">
+                    <input type="text" class="form-control" id="deletecellkey" placeholder="Please Enter Row Key">
+                    <input type="text" class="form-control mt-2 column" placeholder="Column">
+                </div>
+                <button class="btn btn-secondary mt-3" id="deletecelladdcolumn">Add Column</button>
+
+            </div>
+
+            <!-- Delete Rows -->
+            <div id="deleterow"
+                style="display: none; flex-direction: column;justify-content: center; align-items: center;">
+                <h3>Delete Rows</h3>
+
+                <div id="deleterowinputs" class="form-group" style="width:300px">
+                    <input type="text" class="form-control rowkey" placeholder="Row Key">
+                </div>
+                <button class="btn btn-secondary mt-3" id="deleterowaddcolumn">Add Row</button>
+            </div>
+
+            <!-- Add Row -->
+            <div id="addrow"
+                style="display: none; flex-direction: column;justify-content: center; align-items: center;">
+                <h3>Add Row</h3>
+
+                <div id="addrowinputs" class="form-group" style="width:300px">
+                    <input type="text" class="form-control" id="addrowkey" placeholder="Please Enter Row Key">
+                    <div class="form-row mt-2">
+                        <div class="col">
+                            <input type="text" class="form-control column" placeholder="Column">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control value" placeholder="Value">
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-secondary mt-3" id="addrowaddcolumn">Add Column</button>
+
+            </div>
+
+            <!-- Read Rows -->
+            <div id="readrow"
+                style="display: none; flex-direction: column;justify-content: center; align-items: center;">
+                <h3>Read Rows</h3>
+
+                <div id="readrowinputs" class="form-group" style="width:300px">
+                    <input type="text" class="form-control rowkey" placeholder="Row Key">
+                </div>
+                <button class="btn btn-secondary mt-3" id="readrowaddcolumn">Add Row</button>
+            </div>
+
+        </form>
+        <button id="submitbtn" class="btn btn-primary">Submit Query</button>
+
+
     </div>
 
-    <form class="justify-content-center mb-5">
+    <div id="response" style="display: none; flex-direction: column;justify-content: center; align-items: center;">
+        <div id="objectSend"></div>
+        <div id="objectreceive"></div>
 
-        <!-- Set Row -->
-        <div id="setrow" style="display: flex; flex-direction: column;justify-content: center; align-items: center;">
-            <h3>Set Row</h3>
-            <div id="setrowinputs" class="form-group" style="width:300px">
-                <input type="text" class="form-control" id="setrowkey" placeholder="Please Enter Row Key">
-
-                <div class="form-row mt-2">
-                    <div class="col">
-                        <input type="text" class="form-control column" placeholder="Column">
-                    </div>
-                    <div class="col">
-                        <input type="text" class="form-control value" placeholder="Value">
-                    </div>
-                </div>
-            </div>
-            <button class="btn btn-secondary mt-3" id="setrowaddcolumn">Add Column</button>
-
-        </div>
-
-        <!-- Delete Cells -->
-        <div id="deletecell"
-            style="display: none; flex-direction: column;justify-content: center; align-items: center;">
-            <h3>Delete cells</h3>
-
-            <div id="deletecellinputs" class="form-group" style="width:300px">
-                <input type="text" class="form-control" id="deletecellkey" placeholder="Please Enter Row Key">
-                <input type="text" class="form-control mt-2 column" placeholder="Column">
-            </div>
-            <button class="btn btn-secondary mt-3" id="deletecelladdcolumn">Add Column</button>
-
-        </div>
-
-        <!-- Delete Rows -->
-        <div id="deleterow" style="display: none; flex-direction: column;justify-content: center; align-items: center;">
-            <h3>Delete Rows</h3>
-
-            <div id="deleterowinputs" class="form-group" style="width:300px">
-                <input type="text" class="form-control rowkey" placeholder="Row Key">
-            </div>
-            <button class="btn btn-secondary mt-3" id="deleterowaddcolumn">Add Row</button>
-        </div>
-
-        <!-- Add Row -->
-        <div id="addrow" style="display: none; flex-direction: column;justify-content: center; align-items: center;">
-            <h3>Add Row</h3>
-
-            <div id="addrowinputs" class="form-group" style="width:300px">
-                <input type="text" class="form-control" id="addrowkey" placeholder="Please Enter Row Key">
-                <div class="form-row mt-2">
-                    <div class="col">
-                        <input type="text" class="form-control column" placeholder="Column">
-                    </div>
-                    <div class="col">
-                        <input type="text" class="form-control value" placeholder="Value">
-                    </div>
-                </div>
-            </div>
-            <button class="btn btn-secondary mt-3" id="addrowaddcolumn">Add Column</button>
-
-        </div>
-
-        <!-- Read Rows -->
-        <div id="readrow" style="display: none; flex-direction: column;justify-content: center; align-items: center;">
-            <h3>Read Rows</h3>
-
-            <div id="readrowinputs" class="form-group" style="width:300px">
-                <input type="text" class="form-control rowkey" placeholder="Row Key">
-            </div>
-            <button class="btn btn-secondary mt-3" id="readrowaddcolumn">Add Row</button>
-        </div>
-
-    </form>
-    <button id="submitbtn" class="btn btn-primary">Submit Query</button>
-
-
-
+        <button class="btn btn-primary mt-3" id="restart">Restart</button>
+    </div>
 
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

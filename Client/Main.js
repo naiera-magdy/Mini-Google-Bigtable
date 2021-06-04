@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     const TabletServer1 = io('http://localhost:3000');
     //   const TabletServer2 = io('http://localhost:3001');
-    // const MasterServer = io('http://localhost:3002');
+    //   const MasterServer = io('http://localhost:3002');
 
     const Tabletcache = {};
 
@@ -223,10 +223,46 @@ $(document).ready(function () {
             //     TabletServer2.emit('show:ReadRows', tabletArray2);
         }
 
-        $('#main').html(
-            `${JSON.stringify(
-                objectToSend
-            )} <div id="response"> </div> <button class="btn btn-primary mt-3" onclick="window.location.reload(true)">Restart</button>`
-        );
+
+        // Display response page
+        $('#objectSend').html(JSON.stringify(objectToSend));
+        $('#response').css('display', 'flex');
+        $('#main').css('display', 'none');
+
+        // Reset the Main Page        
+        $('#setrowinputs').html(`<input type="text" class="form-control" id="setrowkey" placeholder="Please Enter Row Key">
+
+        <div class="form-row mt-2">
+            <div class="col">
+                <input type="text" class="form-control column" placeholder="Column">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control value" placeholder="Value">
+            </div>
+        </div>`);
+        $('#deletecellinputs').html(`<input type="text" class="form-control" id="deletecellkey" placeholder="Please Enter Row Key">
+        <input type="text" class="form-control mt-2 column" placeholder="Column">`);
+        $('#deleterowinputs').html(`<input type="text" class="form-control rowkey" placeholder="Row Key">`);
+        $('#addrowinputs').html(`<input type="text" class="form-control" id="addrowkey" placeholder="Please Enter Row Key">
+        <div class="form-row mt-2">
+            <div class="col">
+                <input type="text" class="form-control column" placeholder="Column">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control value" placeholder="Value">
+            </div>
+        </div>`);
+        $('#readrowinputs').html(`<input type="text" class="form-control rowkey" placeholder="Row Key">`);
+
     });
+
+
+    // Add events
+    $('#restart').click(function () {
+        $('#response').css('display', 'none');
+        $('#main').css('display', 'flex');
+    }
+    );
+
+
 });
