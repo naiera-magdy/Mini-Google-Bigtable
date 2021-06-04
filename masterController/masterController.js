@@ -1,5 +1,13 @@
 const Show = require('../models/showModel');
 
+// EMITS Required for client
+// 1- setMetaData
+
+// EMITS Required for Server
+// 1- sendAllRows
+// 2- setRows
+
+exports.tabletServersID = [];
 const NUMBER_OF_TABLETS = 4;
 const tabletServersMetaData = [];
 const tabletServersData = [[], [], [], []];
@@ -77,14 +85,15 @@ exports.initialize = async function() {
 
 exports.handleServerRequsets = async function(data) {
   // Delete operation
-
   for (const show of data) {
     switch (show.type) {
       case 'delete':
-        try {
-          const res = await Show.findOneAndRemove({ show_id: show.show_id });
-        } catch (err) {
-          console.log(err);
+        for (const showid in show.show_id) {
+          try {
+            const res = await Show.findOneAndRemove({ show_id: showid });
+          } catch (err) {
+            console.log(err);
+          }
         }
         break;
       case 'update':
@@ -106,4 +115,40 @@ exports.handleServerRequsets = async function(data) {
         break;
     }
   }
+  CheckServersBalancePeriodically();
+};
+
+exports.CheckServersBalancePeriodically = async function() {
+  const socket = this;
+
+  setInterval(function() {
+    if (socket.engine.clientsCount == 2) {
+      socket.to(tabletServerID[0]).emit('sendAllRows', async rows1 => {
+        socket.to(tabletServerID[1]).emit('sendAllRows', async rows2 => {
+          if (
+            rows1.length / rows2.length < 0.5 ||
+            rows1.length / rows2.length > 2
+          ) {
+            await handleServerRequsets(rows1);
+            await handleServerRequsets(rows2);
+            initialize();
+          }
+        });
+      });
+    }
+  }, 10000);
+};
+
+exports.ServerDisconnected = async function(disconnectedID) {
+  const socket = this;
+  if (tabletServersID[0] == disconnectedID) {
+    socket.to(tabletServersID[1]).emit('setRows', tabletServersData);
+    tabletServersMetaData[2].start = 'A';
+    tabletServersMetaData[3].end = 'Z';
+  } else {
+    socket.to(tabletServersID[0]).emit('setRows', tabletServersData);
+    tabletServersMetaData[0].start = 'A';
+    tabletServersMetaData[1].end = 'Z';
+  }
+  socket.emit('setMetaData', tabletServersMetaData);
 };

@@ -31,13 +31,6 @@ server.listen(port, () => {
 
 io.on('connection', async soc => {
   console.log(`User connected from socket id = ${soc.id}`);
-
-  io.emit(
-    'message'
-    // await master.handleServerRequsets();
-  );
-  const init = await master.initialize();
-  // io.emit('message', init.tabletServersMetaData);
 });
 
 process.on('unhandledRejection', err => {
