@@ -1,7 +1,7 @@
 const Show = require('../models/showModel');
 
 // eslint-disable-next-line prefer-const
-let changelog = [];
+global.GLOBAL_CHANGELOG = [];
 
 exports.setCells = async function(data) {
   const socket = this;
@@ -11,7 +11,7 @@ exports.setCells = async function(data) {
     delete data['show_id'];
     // console.log(data);
     const res = await Show.updateOne({ show_id: id }, data);
-    changelog.push({
+    global.GLOBAL_CHANGELOG.push({
       type: 'update',
       show_id: id,
       data
@@ -37,7 +37,7 @@ exports.deleteCells = async function(data) {
     // console.log(fields);
 
     const res = await Show.updateOne({ show_id: id }, { $unset: fields });
-    changelog.push({
+    global.GLOBAL_CHANGELOG.push({
       type: 'update',
       show_id: id,
       data: {
@@ -55,7 +55,7 @@ exports.deleteRow = async function(ids) {
   const socket = this;
   try {
     const res = await Show.deleteMany({ show_id: ids });
-    changelog.push({
+    global.GLOBAL_CHANGELOG.push({
       type: 'delete',
       show_id: ids
     });
@@ -70,7 +70,7 @@ exports.addRow = async function(data) {
   const socket = this;
   try {
     const res = await Show.create(data);
-    changelog.push({
+    global.GLOBAL_CHANGELOG.push({
       type: 'insert',
       show_id: data.show_id,
       data
@@ -90,10 +90,9 @@ exports.readRow = async function(id) {
   try {
     const data = await Show.find({ show_id: id });
     socket.emit('readRows', data);
+    console.log(global.GLOBAL_CHANGELOG);
   } catch (err) {
     console.log(err);
     socket.emit('setCells', "Error can't complete the query");
   }
 };
-
-module.exports.changelog = changelog;

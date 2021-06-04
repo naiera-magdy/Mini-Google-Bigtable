@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const http = require('http');
 const socket = require('socket.io');
+const Show = require('./models/showModel');
 
 const app = require('./app');
 const showController = require('./controllers/showController');
@@ -33,9 +34,18 @@ server.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
 
-io.on('connection', soc => {
+io.on('connection', async (soc) => {
   // console.log(soc.request._query);
-  // soc.emit('metadata', 'Hello from master');
+  
+  // From Master
+  // let shows = await Show.find({release_year: "2000"});
+  // let shows2 = await Show.find({release_year: "2020"});
+  // soc.emit('setTablets', [shows, shows2]);
+
+  // soc.emit('getChangelog');
+  // soc.on('changelog', (data) => {
+    // console.log(data);
+  // });
 
   console.log(`User connected from socket id = ${soc.id}`);
   soc.on('show:Set', showController.setCells);
