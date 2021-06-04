@@ -2,9 +2,21 @@
 $(document).ready(function () {
     // Socket Connections
 
-    const TabletServer1 = io('http://localhost:3000');
-    //   const TabletServer2 = io('http://localhost:3001');
-    //   const MasterServer = io('http://localhost:3002');
+    const TabletServer1 = io('http://localhost:3000', {
+        query: {
+          type: 'Client'
+        }
+      });
+    //   const TabletServer2 = io('http://localhost:3001', {
+    //     query: {
+    //       type: 'Client'
+    //     }
+    //   });
+    //   const MasterServer = io('http://localhost:3002', {
+    //     query: {
+    //       type: 'Client'
+    //     }
+    //   });
 
     const Tabletcache = [{ Start: 'A', End: 'D' },
     { Start: 'E', End: 'K' },
