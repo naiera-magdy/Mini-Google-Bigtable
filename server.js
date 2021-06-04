@@ -22,7 +22,11 @@ mongoose
 
 const port = process.env.PORT || 3000;
 const server = http.createServer(app);
-const io = socket(server);
+const io = socket(server, {
+  cors: {
+    origin: '*'
+  }
+});
 
 server.listen(port, () => {
   console.log(`App running on port ${port}...`);

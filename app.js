@@ -8,7 +8,7 @@ const AppError = require('./utils/appError');
 const app = express();
 
 const corsOptions = {
-  origin: true,
+  origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: 'Content-Type,Authorization,X-Forwarded-For',
   credentials: true,
