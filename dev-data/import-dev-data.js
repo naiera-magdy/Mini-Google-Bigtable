@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const Show = require('./../models/showModel');
 
-dotenv.config({ path: './config.env' });
+dotenv.config({ path: '../config.env' });
 
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
@@ -27,7 +27,7 @@ const shows = [];
 // IMPORT DATA INTO DB
 const importData = async () => {
   try {
-    fs.createReadStream('./dev-data/netflix_titles.csv')
+    fs.createReadStream('./netflix_titles.csv')
       .pipe(csv())
       .on('data', row => {
         shows.push(row);
@@ -58,4 +58,7 @@ if (process.argv[2] === '--import') {
   importData();
 } else if (process.argv[2] === '--delete') {
   deleteData();
+}else {
+  console.log("Please select an option: --import OR --delete");
+  process.exit(1);
 }
