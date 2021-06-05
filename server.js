@@ -2,15 +2,16 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const http = require('http');
 const socket = require('socket.io');
-// const Show = require('./models/showModel');
+const { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } = require('constants');
+const master = require('./masterController/masterController');
 
 const app = require('./app');
-const showController = require('./controllers/showController');
-const tabletMasterController = require('./controllers/tabletMasterController');
 
 dotenv.config({ path: './config.env' });
 
 const DB = process.env.DATABASE;
+
+let serverCount = 0;
 
 mongoose
   .connect(DB, {
@@ -22,25 +23,38 @@ mongoose
   .then(() => console.log('DB connection successful!'))
   .catch(err => console.log(err));
 
-const port = process.env.TABLET_PORT || 3001;
+const port = process.env.PORT || 3000;
 const server = http.createServer(app);
-const io = socket(server, {
-  cors: {
-    origin: '*'
-  }
-});
+const io = socket(server);
 
 server.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
 
+const tabletServerInit = master.initialize();
+
 io.on('connection', async soc => {
   console.log(`User connected from socket id = ${soc.id}`);
-  soc.on('show:Set', showController.setCells);
-  soc.on('show:DeleteCells', showController.deleteCells);
-  soc.on('show:DeleteRow', showController.deleteRow);
-  soc.on('show:AddRow', showController.addRow);
-  soc.on('show:ReadRows', showController.readRow);
+  if (soc.request._query.type === 'Client') {
+    io.emit('newcache', tabletServerInit.tabletServersMetaData);
+  } else {
+    master.tabletServersID.push(soc.id);
+    serverCount++;
+    if (serverCount === 2) {
+      io.to(master.tabletServersID[0]).emit(
+        'setRows',
+        tabletServerInit.tabletServersData.slice(0, 1)
+      );
+      io.to(master.tabletServersID[1]).emit(
+        'setRows',
+        tabletServerInit.tabletServersData.slice(2, 3)
+      );
+    }
+  }
+
+  soc.on('disconnect', function() {
+    master.ServerDisconnected(soc.id);
+  });
 });
 
 process.on('unhandledRejection', err => {
@@ -50,5 +64,3 @@ process.on('unhandledRejection', err => {
     process.exit(1);
   });
 });
-
-tabletMasterController.connectMaster();

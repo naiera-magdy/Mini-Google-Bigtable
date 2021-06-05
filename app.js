@@ -38,6 +38,11 @@ app.get('/home', async (req, res) => {
   // res.render('home');
 });
 
+app.get('/master', async (req, res) => {
+  res.render('master');
+  // res.render('home');
+});
+
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
