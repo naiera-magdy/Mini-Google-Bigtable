@@ -11,6 +11,8 @@ dotenv.config({ path: './config.env' });
 
 const DB = process.env.DATABASE;
 
+let serverCount = 0;
+
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
@@ -29,19 +31,24 @@ server.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
 
-let tabletServersData,
-  tabletServersMetaData = master.initialize();
-let serverCount = 0;
+const tabletServerInit = master.initialize();
+
 io.on('connection', async soc => {
   console.log(`User connected from socket id = ${soc.id}`);
-  if (soc.request._query.type == 'Client') {
-    io.emit('newcache', tabletServersMetaData);
+  if (soc.request._query.type === 'Client') {
+    io.emit('newcache', tabletServerInit.tabletServersMetaData);
   } else {
     master.tabletServersID.push(soc.id);
     serverCount++;
-    if (serversCount == 2) {
-      io.to(socketId[0]).emit('setRows', tabletServersData.slice(0, 1));
-      io.to(socketId[1]).emit('setRows', tabletServersData.slice(2, 3));
+    if (serverCount === 2) {
+      io.to(master.tabletServersID[0]).emit(
+        'setRows',
+        tabletServerInit.tabletServersData.slice(0, 1)
+      );
+      io.to(master.tabletServersID[1]).emit(
+        'setRows',
+        tabletServerInit.tabletServersData.slice(2, 3)
+      );
     }
   }
 

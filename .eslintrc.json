@@ -15,9 +15,8 @@
     "no-underscore-dangle": "off",
     "class-methods-use-this": "off",
     "no-await-in-loop": "off",
-    "    "no-await-in-loop": "off",
-    ": "off",
     "no-restricted-syntax": "off",
+    "guard-for-in": "off",
     "prefer-destructuring": ["error", { "object": true, "array": false }],
     "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }]
   }

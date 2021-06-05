@@ -7,7 +7,8 @@ const Show = require('../models/showModel');
 // 2- sendAllRows
 // 3- setRows
 
-exports.tabletServersID = [];
+global.tabletServersID = [];
+
 const NUMBER_OF_TABLETS = 4;
 const tabletServersMetaData = [];
 const tabletServersData = [[], [], [], []];
@@ -123,15 +124,15 @@ exports.CheckServersBalancePeriodically = async function() {
   setInterval(async function() {
     let counter = 0;
     let data2;
-    if (socket.engine.clientsCount == 2) {
-      socket.to(tabletServerID[0]).emit('checkBalance');
-      socket.to(tabletServerID[1]).emit('checkBalance');
+    if (socket.engine.clientsCount === 2) {
+      socket.to(tabletServersID[0]).emit('checkBalance');
+      socket.to(tabletServersID[1]).emit('checkBalance');
       socket.on('checkBalanceResponse', async data => {
         counter++;
-        if (counter == 1) {
+        if (counter === 1) {
           data2 = data;
         }
-        if (counter == 2) {
+        if (counter === 2) {
           await handleServerRequsets(data2.changelog);
           await handleServerRequsets(data.changelog);
           if (
@@ -148,7 +149,7 @@ exports.CheckServersBalancePeriodically = async function() {
 
 exports.ServerDisconnected = async function(disconnectedID) {
   const socket = this;
-  if (tabletServersID[0] == disconnectedID) {
+  if (tabletServersID[0] === disconnectedID) {
     socket.to(tabletServersID[1]).emit('setRows', tabletServersData);
     tabletServersMetaData[2].start = 'A';
     tabletServersMetaData[3].end = 'Z';
