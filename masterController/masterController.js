@@ -4,8 +4,8 @@ const Show = require('../models/showModel');
 // 1- setMetaData
 
 // EMITS Required for Server
-// 1- sendAllRows
-// 2- setRows
+// 2- sendAllRows
+// 3- setRows
 
 exports.tabletServersID = [];
 const NUMBER_OF_TABLETS = 4;
@@ -115,25 +115,32 @@ exports.handleServerRequsets = async function(data) {
         break;
     }
   }
-  CheckServersBalancePeriodically();
 };
 
 exports.CheckServersBalancePeriodically = async function() {
   const socket = this;
 
-  setInterval(function() {
+  setInterval(async function() {
+    let counter = 0;
+    let data2;
     if (socket.engine.clientsCount == 2) {
-      socket.to(tabletServerID[0]).emit('sendAllRows', async rows1 => {
-        socket.to(tabletServerID[1]).emit('sendAllRows', async rows2 => {
+      socket.to(tabletServerID[0]).emit('checkBalance');
+      socket.to(tabletServerID[1]).emit('checkBalance');
+      socket.on('checkBalanceResponse', async data => {
+        counter++;
+        if (counter == 1) {
+          data2 = data;
+        }
+        if (counter == 2) {
+          await handleServerRequsets(data2.changelog);
+          await handleServerRequsets(data.changelog);
           if (
-            rows1.length / rows2.length < 0.5 ||
-            rows1.length / rows2.length > 2
+            data.total_count / data2.total_count < 0.5 ||
+            data.total_count / data2.total_count > 2
           ) {
-            await handleServerRequsets(rows1);
-            await handleServerRequsets(rows2);
             initialize();
           }
-        });
+        }
       });
     }
   }, 10000);
