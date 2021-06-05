@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const http = require('http');
 const socket = require('socket.io');
-const Show = require('./models/showModel');
+// const Show = require('./models/showModel');
 
 const app = require('./app');
 const showController = require('./controllers/showController');
@@ -34,9 +34,8 @@ server.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
 
-io.on('connection', async (soc) => {
+io.on('connection', async soc => {
   // console.log(soc.request._query);
-  
   // From Master
   // let shows = await Show.find({release_year: "2000"});
   // let shows2 = await Show.find({release_year: "2020"});
@@ -44,7 +43,7 @@ io.on('connection', async (soc) => {
 
   // soc.emit('getChangelog');
   // soc.on('changelog', (data) => {
-    // console.log(data);
+  // console.log(data);
   // });
 
   console.log(`User connected from socket id = ${soc.id}`);
