@@ -181,12 +181,15 @@ $(document).ready(function () {
       objectToSend['title'] = rowkey;
       columnarray.forEach((key, i) => (objectToSend[key] = valarray[i]));
 
+      console.log(objectToSend);
       if (NUMBER_OF_SERVERS === 2) {
+        console.log("Sending");
         let socket =
-          rowkey[0] >= Tabletcache[0].Start && rowkey[0] <= Tabletcache[1].End
+          rowkey[0] >= Tabletcache[0].Start && rowkey[0] <= Tabletcache[0].End
             ? TabletServer1
             : TabletServer2;
         socket.emit('show:Set', objectToSend);
+        console.log("Sent");
       } else {
         TabletServer1.emit('show:Set', objectToSend);
       }
@@ -209,7 +212,7 @@ $(document).ready(function () {
 
       if (NUMBER_OF_SERVERS === 2) {
         let socket =
-          rowkey[0] >= Tabletcache[0].Start && rowkey[0] <= Tabletcache[1].End
+          rowkey[0] >= Tabletcache[0].Start && rowkey[0] <= Tabletcache[0].End
             ? TabletServer1
             : TabletServer2;
         socket.emit('show:Set', objectToSend);
@@ -230,7 +233,7 @@ $(document).ready(function () {
         if (NUMBER_OF_SERVERS === 2) {
           if (
             $(this).val()[0] >= Tabletcache[0].Start &&
-            $(this).val()[0] <= Tabletcache[1].End
+            $(this).val()[0] <= Tabletcache[0].End
           ) {
             tabletArray1.push($(this).val());
           } else tabletArray2.push($(this).val());
@@ -276,7 +279,7 @@ $(document).ready(function () {
 
       if (NUMBER_OF_SERVERS === 2) {
         let socket =
-          rowkey[0] >= Tabletcache[0].Start && rowkey[0] <= Tabletcache[1].End
+          rowkey[0] >= Tabletcache[0].Start && rowkey[0] <= Tabletcache[0].End
             ? TabletServer1
             : TabletServer2;
         socket.emit('show:AddRow', objectToSend);
@@ -297,7 +300,7 @@ $(document).ready(function () {
         if (NUMBER_OF_SERVERS === 2) {
           if (
             $(this).val()[0] >= Tabletcache[0].Start &&
-            $(this).val()[0] <= Tabletcache[1].End
+            $(this).val()[0] <= Tabletcache[0].End
           ) {
             tabletArray1.push($(this).val());
           } else tabletArray2.push($(this).val());
