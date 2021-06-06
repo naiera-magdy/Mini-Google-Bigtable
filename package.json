@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start:master": "nodemon MasterServer.js",
+    "start:tablet": "nodemon TabletServer.js",
+    "start:tablet2": "nodemon TabletServer2.js"
   },
   "repository": {
     "type": "git",
@@ -31,8 +33,10 @@
     "mongoose": "^5.5.2",
     "mongoose-id-validator": "^0.6.0",
     "morgan": "^1.9.1",
+    "serve": "^11.3.2",
     "slugify": "^1.3.4",
     "socket.io": "^4.1.2",
+    "socket.io-client": "^4.1.2",
     "validator": "^10.11.0"
   },
   "devDependencies": {

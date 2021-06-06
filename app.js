@@ -8,7 +8,7 @@ const AppError = require('./utils/appError');
 const app = express();
 
 const corsOptions = {
-  origin: true,
+  origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: 'Content-Type,Authorization,X-Forwarded-For',
   credentials: true,
@@ -34,7 +34,12 @@ app.use((req, res, next) => {
 app.set('view engine', 'ejs');
 
 app.get('/home', async (req, res) => {
-  res.render('home');
+  res.render('index');
+  // res.render('home');
+});
+
+app.get('/master', async (req, res) => {
+  res.render('master');
   // res.render('home');
 });
 
