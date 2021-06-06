@@ -15,8 +15,12 @@ exports.connectMaster = function() {
   });
 
   global.masterSocket.on('setRows', async data => {
+    let sizes = '';
+    for (const tablet of data) {
+      sizes += `${tablet.length}, `;
+    }
     sendlog(
-      `Received ${data.length} Tablets from Master with sizes ${data[0].length} and ${data[1].length} rows`
+      `Received ${data.length} Tablets from Master with sizes ${sizes} rows`
     );
     console.log('Database received');
     await Show.deleteMany();
