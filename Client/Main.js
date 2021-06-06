@@ -286,7 +286,7 @@ $(document).ready(function () {
 
 
       // Log to Master
-      log = `Sent Delete Rows of keys ${rowkey}`;
+      log = `Sent Add Row of key ${rowkey}`;
       MasterServer.emit("logs", log);
     }
     // Read Rows
@@ -323,7 +323,7 @@ $(document).ready(function () {
 
 
       // Log to Master
-      log = `Sent Delete Rows of keys ${objectToSend.toString()}`;
+      log = `Sent Read Rows of keys ${objectToSend.toString()}`;
       MasterServer.emit("logs", log);
     }
 
