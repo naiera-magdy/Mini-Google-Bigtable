@@ -1,12 +1,13 @@
 const Show = require('../models/showModel');
+const { sendlog } = require('./tabletMasterController');
 
 // eslint-disable-next-line prefer-const
 global.GLOBAL_CHANGELOG = [];
 
 exports.setCells = async function(data) {
   const socket = this;
+  const id = data.title;
   try {
-    const id = data.title;
     // eslint-disable-next-line dot-notation
     delete data['title'];
     // console.log(data);
@@ -22,12 +23,18 @@ exports.setCells = async function(data) {
     console.log(err);
     socket.emit('setCells', "Error can't complete the query");
   }
+
+  sendlog(
+    `Recieved set Cells Query on show with title => ${id}, Updated columns: ${Object.keys(
+      data
+    )}`
+  );
 };
 
 exports.deleteCells = async function(data) {
   const socket = this;
+  const id = data.title;
   try {
-    const id = data.title;
     // eslint-disable-next-line dot-notation
     delete data['title'];
     const fields = {};
@@ -51,6 +58,10 @@ exports.deleteCells = async function(data) {
     console.log(err);
     socket.emit('deleteCells', "Error can't complete the query");
   }
+
+  sendlog(
+    `Recieved delete Cells Query on show with title => ${id}, deleted columns: ${data.fields}`
+  );
 };
 
 exports.deleteRow = async function(ids) {
@@ -67,6 +78,7 @@ exports.deleteRow = async function(ids) {
     console.log(err);
     socket.emit('deleteRow', "Error can't complete the query");
   }
+  sendlog(`Recieved delete Rows Query on shows with titles => ${ids}`);
 };
 
 exports.addRow = async function(data) {
@@ -87,6 +99,7 @@ exports.addRow = async function(data) {
       'Duplicate key error please make sure to provide a unique id'
     );
   }
+  sendlog(`Recieved add Row Query with title => ${data.title}`);
 };
 
 exports.readRow = async function(id) {
@@ -100,4 +113,5 @@ exports.readRow = async function(id) {
     console.log(err);
     socket.emit('setCells', "Error can't complete the query");
   }
+  sendlog(`Recieved read Rows Query on shows with titles => ${id}`);
 };

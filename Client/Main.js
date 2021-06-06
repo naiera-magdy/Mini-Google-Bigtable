@@ -2,6 +2,7 @@
 $(document).ready(function () {
   // Socket Connections
 
+  let log;
   let TabletServer1;
   let TabletServer2;
   let NUMBER_OF_SERVERS;
@@ -12,15 +13,14 @@ $(document).ready(function () {
   });
 
   let Tabletcache = [];
-  // const Tabletcache = [
-  //   { Start: 'A', End: 'D' },
-  //   { Start: 'E', End: 'K' },
-  //   { Start: 'L', End: 'P' },
-  //   { Start: 'Q', End: 'Z' }
-  // ];
 
   // Socket events for Master
   MasterServer.on('newcache', data => {
+
+    // Log to Master
+    log = `Received New Cache From Master`;
+    MasterServer.emit("logs", log);
+
     console.log(data);
     NUMBER_OF_SERVERS = data.urls.length;
     if (NUMBER_OF_SERVERS === 2) {
@@ -34,36 +34,66 @@ $(document).ready(function () {
     // Socket events for TabletServer 1
     TabletServer1.on('readRows', data => {
       console.log(data);
+      // Log to Master
+      log = `Received Query Respone`;
+      MasterServer.emit("logs", log);
     });
     TabletServer1.on('setCells', data => {
       console.log(data);
+      // Log to Master
+      log = `Received Query Respone`;
+      MasterServer.emit("logs", log);
     });
     TabletServer1.on('deleteCells', data => {
       console.log(data);
+      // Log to Master
+      log = `Received Query Respone`;
+      MasterServer.emit("logs", log);
     });
     TabletServer1.on('deleteRow', data => {
       console.log(data);
+      // Log to Master
+      log = `Received Query Respone`;
+      MasterServer.emit("logs", log);
     });
     TabletServer1.on('addRow', data => {
       console.log(data);
+      // Log to Master
+      log = `Received Query Respone`;
+      MasterServer.emit("logs", log);
     });
 
     if (NUMBER_OF_SERVERS === 2) {
       // Socket events for TabletServer 2
       TabletServer2.on('readRows', data => {
         console.log(data);
+        // Log to Master
+        log = `Received Query Respone`;
+        MasterServer.emit("logs", log);
       });
       TabletServer2.on('setCells', data => {
         console.log(data);
+        // Log to Master
+        log = `Received Query Respone`;
+        MasterServer.emit("logs", log);
       });
       TabletServer2.on('deleteCells', data => {
         console.log(data);
+        // Log to Master
+        log = `Received Query Respone`;
+        MasterServer.emit("logs", log);
       });
       TabletServer2.on('deleteRow', data => {
         console.log(data);
+        // Log to Master
+        log = `Received Query Respone`;
+        MasterServer.emit("logs", log);
       });
       TabletServer2.on('addRow', data => {
         console.log(data);
+        // Log to Master
+        log = `Received Query Respone`;
+        MasterServer.emit("logs", log);
       });
     }
   });
@@ -160,6 +190,10 @@ $(document).ready(function () {
       } else {
         TabletServer1.emit('show:Set', objectToSend);
       }
+
+      // Log to Master
+      log = `Sent Set Row of key ${rowkey}`;
+      MasterServer.emit("logs", log);
     }
     // Delete Cells
     else if (radioValue === 'deletecell') {
@@ -182,6 +216,10 @@ $(document).ready(function () {
       } else {
         TabletServer1.emit('show:DeleteCells', objectToSend);
       }
+
+      // Log to Master
+      log = `Sent Delete Cells of key ${rowkey}`;
+      MasterServer.emit("logs", log);
     }
     // Delete Rows
     else if (radioValue === 'deleterow') {
@@ -214,6 +252,11 @@ $(document).ready(function () {
         if (tabletArray1.length)
           TabletServer1.emit('show:DeleteRow', tabletArray1);
       }
+
+
+      // Log to Master
+      log = `Sent Delete Rows of keys ${objectToSend.toString()}`;
+      MasterServer.emit("logs", log);
     }
     // Add Row
     else if (radioValue === 'addrow') {
@@ -240,6 +283,11 @@ $(document).ready(function () {
       } else {
         TabletServer1.emit('show:AddRow', objectToSend);
       }
+
+
+      // Log to Master
+      log = `Sent Delete Rows of keys ${rowkey}`;
+      MasterServer.emit("logs", log);
     }
     // Read Rows
     else if (radioValue === 'readrow') {
@@ -273,6 +321,10 @@ $(document).ready(function () {
           TabletServer1.emit('show:DeleteRow', tabletArray1);
       }
 
+
+      // Log to Master
+      log = `Sent Delete Rows of keys ${objectToSend.toString()}`;
+      MasterServer.emit("logs", log);
     }
 
     // Display response page
