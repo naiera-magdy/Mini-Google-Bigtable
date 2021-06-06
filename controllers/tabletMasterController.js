@@ -1,15 +1,23 @@
 const socket = require('socket.io-client');
 const Show = require('../models/showModel');
 
+const sendlog = function(logs) {
+  global.masterSocket.emit('logs', logs);
+};
+exports.sendlog = sendlog;
+
 exports.connectMaster = function() {
-  const masterSocket = socket.connect(`${process.env.MASTER_URL}`, {
+  global.masterSocket = socket.connect(`${process.env.MASTER_URL}`, {
     query: {
       url: `${process.env.TABLET_URL}`,
       type: 'Tablet'
     }
   });
 
-  masterSocket.on('setRows', async data => {
+  global.masterSocket.on('setRows', async data => {
+    sendlog(
+      `Received ${data.length} Tablets from Master with sizes ${data[0].length} and ${data[1].length} rows`
+    );
     console.log('Database received');
     await Show.deleteMany();
     // eslint-disable-next-line no-restricted-syntax
@@ -19,10 +27,11 @@ exports.connectMaster = function() {
     }
   });
 
-  masterSocket.on('checkBalance', async () => {
+  global.masterSocket.on('checkBalance', async () => {
+    sendlog('Master Asked for the changelog');
     console.log('Master Asked for the changelog');
     const count = await Show.countDocuments();
-    masterSocket.emit('checkBalanceResponse', {
+    global.masterSocket.emit('checkBalanceResponse', {
       total_count: count,
       changelog: global.GLOBAL_CHANGELOG
     });
