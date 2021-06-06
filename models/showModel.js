@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 
 const showSchema = new mongoose.Schema({
-  show_id: {
+  title: {
     type: String,
-    required: [true, `The show must have id`],
-    unique: [true, 'The show id must be unique']
+    requried: [true, 'title must be provided'],
+    unique: [true, 'title must be unique']
   },
+  show_id: String,
   type: String,
-  title: String,
   director: String,
   cast: String,
   country: String,
