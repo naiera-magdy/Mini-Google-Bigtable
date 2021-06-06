@@ -12,7 +12,6 @@ const DB = process.env.DATABASE;
 
 global.serverCount = 0;
 
-let tabletServerInit;
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
@@ -22,7 +21,7 @@ mongoose
   })
   .then(async () => {
     console.log('DB connection successful!');
-    tabletServerInit = await master.initialize();
+    await master.initialize();
     master.handleLogs(true, 'Initialized');
   })
   .catch(err => console.log(err));
@@ -42,15 +41,12 @@ server.listen(port, () => {
 global.urls = [];
 global.io.on('connection', async soc => {
   soc.on('checkBalanceResponse', master.checkBalanceResponse);
-  // console.log(soc.request._query.url);
+
   console.log(`User connected from socket id = ${soc.id}`);
-  if (soc.request._query.type === 'Client') {
-    master.handleLogs(true, 'Sending Met-Data', soc);
-    global.io.emit('newcache', {
-      urls: global.urls,
-      data: tabletServerInit.tabletServersMetaDataSent
-    });
-  } else {
+
+  master.handleLogs(true, 'Sending Met-Data', soc);
+
+  if (soc.request._query.type === 'Tablet') {
     global.tabletServersID.push(soc.id);
     global.urls.push(soc.request._query.url);
     global.serverCount++;
@@ -58,20 +54,28 @@ global.io.on('connection', async soc => {
       master.handleLogs(true, 'Sending Data', soc);
       global.io
         .to(global.tabletServersID[0])
-        .emit('setRows', tabletServerInit.tabletServersData.slice(0, 2));
+        .emit('setRows', global.tabletServersData.slice(0, 2));
       global.io
         .to(global.tabletServersID[1])
-        .emit('setRows', tabletServerInit.tabletServersData.slice(2, 4));
+        .emit('setRows', global.tabletServersData.slice(2, 4));
     }
   }
+
+  global.io.emit('newcache', {
+    urls: global.urls,
+    data: global.tabletServersMetaDataSent
+  });
 
   soc.on('disconnect', function() {
     const s = this;
     if (s.request._query.type === 'Tablet') {
+      master.handleLogs(false, 'Tablet Disconnected', soc);
       global.serverCount--;
       global.urls.splice(global.urls.indexOf(s.request._query.url), 1);
       global.tabletServersID.splice(global.tabletServersID.indexOf(s.id), 1);
       master.ServerDisconnected(s, soc.id);
+    } else if (s.request._query.type === 'Client') {
+      master.handleLogs(false, 'Client Disconnected', soc);
     }
   });
 

@@ -14,8 +14,8 @@ const logger = fs.createWriteStream('log.txt', {
 global.tabletServersID = [];
 
 const NUMBER_OF_TABLETS = 4;
-let tabletServersMetaDataSent = [];
-let tabletServersData = [[], [], [], []];
+global.tabletServersMetaDataSent = [];
+global.tabletServersData = [[], [], [], []];
 
 const handleLogs = function(isMaster, logSting, soc) {
   if (isMaster) {
@@ -31,7 +31,7 @@ const handleLogs = function(isMaster, logSting, soc) {
 exports.handleLogs = handleLogs;
 
 const initialize = async function() {
-  tabletServersData = [[], [], [], []];
+  global.tabletServersData = [[], [], [], []];
 
   const data = await Show.find({}, { _id: 0 }).sort('title');
 
@@ -51,19 +51,18 @@ const initialize = async function() {
     oneServerTabletLen * 4 + 1
   );
 
-  tabletServersMetaDataSent = [
+  global.tabletServersMetaDataSent = [
     {
       Start: '',
       End: tablet2[tablet2.length - 1].title
     },
     {
       Start: tablet3[0].title,
-      End: '{'
+      End: '~'
     }
   ];
 
-  tabletServersData = [tablet1, tablet2, tablet3, tablet4];
-  return { tabletServersData, tabletServersMetaDataSent };
+  global.tabletServersData = [tablet1, tablet2, tablet3, tablet4];
 };
 exports.initialize = initialize;
 
@@ -113,13 +112,17 @@ exports.CheckServersBalancePeriodically = async function() {
 
 exports.ServerDisconnected = async function(socket, disconnectedID) {
   if (global.tabletServersID[0] === disconnectedID) {
-    global.io.to(global.tabletServersID[1]).emit('setRows', tabletServersData);
+    global.io
+      .to(global.tabletServersID[1])
+      .emit('setRows', global.tabletServersData);
   } else {
-    global.io.to(global.tabletServersID[0]).emit('setRows', tabletServersData);
+    global.io
+      .to(global.tabletServersID[0])
+      .emit('setRows', global.tabletServersData);
   }
 
-  tabletServersMetaDataSent[0].Start = 'A';
-  tabletServersMetaDataSent[0].End = '{';
+  global.tabletServersMetaDataSent[0].Start = '';
+  global.tabletServersMetaDataSent[0].End = '~';
 
   if (global.urls[0] === socket.request._query.url) {
     global.urls = [global.urls[1]];
@@ -129,16 +132,15 @@ exports.ServerDisconnected = async function(socket, disconnectedID) {
     handleLogs(true, 'Tablet 2 Disconnected');
   }
 
-  console.log(tabletServersMetaDataSent[0]);
+  console.log(global.tabletServersMetaDataSent[0]);
 
   global.io.emit('newcache', {
     urls: global.urls,
-    data: [tabletServersMetaDataSent[0]]
+    data: [global.tabletServersMetaDataSent[0]]
   });
 };
 
 exports.checkBalanceResponse = async function(data) {
-  const socket = this;
   counter++;
   console.log(counter);
   if (counter === 1) {
@@ -160,21 +162,21 @@ exports.checkBalanceResponse = async function(data) {
     );
     if (Math.abs(data.total_count - data2.total_count) > 100) {
       handleLogs(true, 'Re-balancing DB ... ');
-      const dataBalanced = await initialize();
+      await initialize();
       handleLogs(true, 'Sending new Met-Data');
 
-      socket.emit('newcache', {
+      global.io.emit('newcache', {
         urls: global.urls,
-        data: dataBalanced.tabletServersMetaDataSent
+        data: global.tabletServersMetaDataSent
       });
 
       handleLogs(true, 'Sending Re-balanced DB');
       global.io
         .to(global.tabletServersID[0])
-        .emit('setRows', dataBalanced.tabletServersData.slice(0, 2));
+        .emit('setRows', global.tabletServersData.slice(0, 2));
       global.io
         .to(global.tabletServersID[1])
-        .emit('setRows', dataBalanced.tabletServersData.slice(2, 4));
+        .emit('setRows', global.tabletServersData.slice(2, 4));
     }
   }
 };

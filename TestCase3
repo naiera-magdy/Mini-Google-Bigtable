@@ -1,0 +1,157 @@
+1623023125827 : Master : Initialized 
+1623023129125 : Master : Sending Met-Data 
+1623023130992 : Master : Sending Met-Data 
+1623023130992 : Master : Sending Data 
+1623023133449 : Tablet 2 : Received 2 Tablets from Master with sizes 459, 459,  rows 
+1623023134545 : Tablet 1 : Received 2 Tablets from Master with sizes 460, 459,  rows 
+1623023137776 : Master : Sending Met-Data 
+1623023137847 : Client W_RSt8VPcF-y-CM8AAAF : Received New Cache From Master 
+1623023139804 : Master : Sending Met-Data 
+1623023139838 : Client W_RSt8VPcF-y-CM8AAAF : Received New Cache From Master 
+1623023139996 : Client hXE0QSfcpaJyyYXPAAAH : Received New Cache From Master 
+1623023145597 : Master : Checking Balance ...  
+1623023145630 : Tablet 2 : Master Asked for the changelog 
+1623023145637 : Tablet 1 : Master Asked for the changelog 
+1623023145660 : Master : Handling Tablet 1 change-log ... 
+1623023145660 : Master : Handling Tablet 2 change-log ... 
+1623023150118 : Client hXE0QSfcpaJyyYXPAAAH : Sent Read Rows of keys Medium 
+1623023150140 : Tablet 2 : Recieved read Rows Query on shows with titles => Medium 
+1623023150190 : Client hXE0QSfcpaJyyYXPAAAH : Received Query Respone 
+1623023153904 : Client W_RSt8VPcF-y-CM8AAAF : Sent Read Rows of keys A Choo 
+1623023153965 : Tablet 1 : Recieved read Rows Query on shows with titles => A Choo 
+1623023153985 : Client W_RSt8VPcF-y-CM8AAAF : Received Query Respone 
+1623023165571 : Master : Checking Balance ...  
+1623023165596 : Tablet 2 : Master Asked for the changelog 
+1623023165610 : Tablet 1 : Master Asked for the changelog 
+1623023165619 : Master : Handling Tablet 1 change-log ... 
+1623023165619 : Master : Handling Tablet 2 change-log ... 
+1623023169551 : Client hXE0QSfcpaJyyYXPAAAH : Sent Delete Cells of key Kingdom of Us 
+1623023169566 : Tablet 2 : Recieved delete Cells Query on show with title => Kingdom of Us, deleted columns: type 
+1623023169603 : Client hXE0QSfcpaJyyYXPAAAH : Received Query Respone 
+1623023185571 : Master : Checking Balance ...  
+1623023185595 : Tablet 2 : Master Asked for the changelog 
+1623023185611 : Tablet 1 : Master Asked for the changelog 
+1623023185622 : Master : Handling Tablet 1 change-log ... 
+1623023185632 : Master : Handling Tablet 2 change-log ... 
+1623023186575 : Client W_RSt8VPcF-y-CM8AAAF : Sent Set Row of key A Choo 
+1623023186615 : Tablet 1 : Recieved set Cells Query on show with title => A Choo, Updated columns: date_added 
+1623023186634 : Client W_RSt8VPcF-y-CM8AAAF : Received Query Respone 
+1623023186891 : Client hXE0QSfcpaJyyYXPAAAH : Sent Set Row of key Kingdom of Us 
+1623023186903 : Tablet 2 : Recieved set Cells Query on show with title => Kingdom of Us, Updated columns: type 
+1623023186951 : Client hXE0QSfcpaJyyYXPAAAH : Received Query Respone 
+1623023194396 : Client hXE0QSfcpaJyyYXPAAAH : Sent Read Rows of keys Kingdom of Us 
+1623023194413 : Tablet 2 : Recieved read Rows Query on shows with titles => Kingdom of Us 
+1623023194453 : Client hXE0QSfcpaJyyYXPAAAH : Received Query Respone 
+1623023205572 : Master : Checking Balance ...  
+1623023205596 : Tablet 2 : Master Asked for the changelog 
+1623023205610 : Tablet 1 : Master Asked for the changelog 
+1623023205620 : Master : Handling Tablet 1 change-log ... 
+1623023205625 : Master : Handling Tablet 2 change-log ... 
+1623023213246 : Client W_RSt8VPcF-y-CM8AAAF : Sent Add Row of key Our Test Case 
+1623023213261 : Tablet 2 : Recieved add Row Query with title => Our Test Case 
+1623023213285 : Client W_RSt8VPcF-y-CM8AAAF : Received Query Respone 
+1623023225572 : Master : Checking Balance ...  
+1623023225596 : Tablet 2 : Master Asked for the changelog 
+1623023225610 : Tablet 1 : Master Asked for the changelog 
+1623023225621 : Master : Handling Tablet 1 change-log ... 
+1623023225636 : Master : Handling Tablet 2 change-log ... 
+1623023229205 : Tablet 1 : Tablet Disconnected 
+1623023229300 : Master : Tablet 2 Disconnected 
+1623023229374 : Client hXE0QSfcpaJyyYXPAAAH : Received New Cache From Master 
+1623023229392 : Client W_RSt8VPcF-y-CM8AAAF : Received New Cache From Master 
+1623023233055 : Tablet 1 : Received 4 Tablets from Master with sizes 460, 459, 459, 459,  rows 
+1623023244986 : Master : Sending Met-Data 
+1623023244986 : Master : Sending Data 
+1623023245125 : Client hXE0QSfcpaJyyYXPAAAH : Received New Cache From Master 
+1623023245125 : Client W_RSt8VPcF-y-CM8AAAF : Received New Cache From Master 
+1623023245572 : Master : Checking Balance ...  
+1623023247788 : Tablet 1 : Received 2 Tablets from Master with sizes 460, 459,  rows 
+1623023247788 : Tablet 1 : Master Asked for the changelog 
+1623023248352 : Tablet 2 : Received 2 Tablets from Master with sizes 459, 459,  rows 
+1623023248378 : Tablet 2 : Master Asked for the changelog 
+1623023249244 : Master : Handling Tablet 1 change-log ... 
+1623023249244 : Master : Handling Tablet 2 change-log ... 
+1623023249245 : Master : Re-balancing DB ...  
+1623023249421 : Master : Sending new Met-Data 
+1623023249422 : Master : Sending Re-balanced DB 
+1623023249502 : Client W_RSt8VPcF-y-CM8AAAF : Received New Cache From Master 
+1623023249502 : Client hXE0QSfcpaJyyYXPAAAH : Received New Cache From Master 
+1623023251602 : Tablet 1 : Received 2 Tablets from Master with sizes 460, 459,  rows 
+1623023252980 : Client hXE0QSfcpaJyyYXPAAAH : Sent Read Rows of keys Medium 
+1623023253036 : Tablet 2 : Recieved read Rows Query on shows with titles => Medium 
+1623023253073 : Client hXE0QSfcpaJyyYXPAAAH : Received Query Respone 
+1623023254526 : Tablet 2 : Received 2 Tablets from Master with sizes 459, 459,  rows 
+1623023265572 : Master : Checking Balance ...  
+1623023265603 : Tablet 1 : Master Asked for the changelog 
+1623023265613 : Tablet 2 : Master Asked for the changelog 
+1623023265620 : Master : Handling Tablet 1 change-log ... 
+1623023265620 : Master : Handling Tablet 2 change-log ... 
+1623023285572 : Master : Checking Balance ...  
+1623023285599 : Tablet 1 : Master Asked for the changelog 
+1623023285607 : Tablet 2 : Master Asked for the changelog 
+1623023285618 : Master : Handling Tablet 1 change-log ... 
+1623023285618 : Master : Handling Tablet 2 change-log ... 
+1623023290843 : Client W_RSt8VPcF-y-CM8AAAF : Sent Read Rows of keys Our Test Case 
+1623023290906 : Tablet 2 : Recieved read Rows Query on shows with titles => Our Test Case 
+1623023290928 : Client W_RSt8VPcF-y-CM8AAAF : Received Query Respone 
+1623023297532 : Client hXE0QSfcpaJyyYXPAAAH : Sent Add Row of key Kill The Demon Kid 
+1623023297583 : Tablet 2 : Recieved add Row Query with title => Kill The Demon Kid 
+1623023297620 : Client hXE0QSfcpaJyyYXPAAAH : Received Query Respone 
+1623023305572 : Master : Checking Balance ...  
+1623023305595 : Tablet 1 : Master Asked for the changelog 
+1623023305608 : Tablet 2 : Master Asked for the changelog 
+1623023305616 : Master : Handling Tablet 1 change-log ... 
+1623023305616 : Master : Handling Tablet 2 change-log ... 
+1623023313249 : Client W_RSt8VPcF-y-CM8AAAF : Sent Read Rows of keys A Choo 
+1623023313273 : Tablet 1 : Recieved read Rows Query on shows with titles => A Choo 
+1623023313295 : Client W_RSt8VPcF-y-CM8AAAF : Received Query Respone 
+1623023313594 : Client hXE0QSfcpaJyyYXPAAAH : Sent Read Rows of keys A Choo 
+1623023313609 : Tablet 1 : Recieved read Rows Query on shows with titles => A Choo 
+1623023313649 : Client hXE0QSfcpaJyyYXPAAAH : Received Query Respone 
+1623023324666 : Client W_RSt8VPcF-y-CM8AAAF : Sent Read Rows of keys A 2nd Chance 
+1623023324698 : Tablet 1 : Recieved read Rows Query on shows with titles => A 2nd Chance 
+1623023324719 : Client W_RSt8VPcF-y-CM8AAAF : Received Query Respone 
+1623023325573 : Master : Checking Balance ...  
+1623023325599 : Tablet 1 : Master Asked for the changelog 
+1623023325619 : Tablet 2 : Master Asked for the changelog 
+1623023325620 : Master : Handling Tablet 1 change-log ... 
+1623023325620 : Master : Handling Tablet 2 change-log ... 
+1623023327951 : Client hXE0QSfcpaJyyYXPAAAH : Sent Read Rows of keys A Silent Voice 
+1623023327962 : Tablet 1 : Recieved read Rows Query on shows with titles => A Silent Voice 
+1623023327997 : Client hXE0QSfcpaJyyYXPAAAH : Received Query Respone 
+1623023336609 : Client hXE0QSfcpaJyyYXPAAAH : Sent Delete Rows of keys A Silent Voice 
+1623023336628 : Tablet 1 : Recieved delete Rows Query on shows with titles => A Silent Voice 
+1623023336664 : Client hXE0QSfcpaJyyYXPAAAH : Received Query Respone 
+1623023345573 : Master : Checking Balance ...  
+1623023345598 : Tablet 1 : Master Asked for the changelog 
+1623023345614 : Tablet 2 : Master Asked for the changelog 
+1623023345616 : Master : Handling Tablet 1 change-log ... 
+1623023345621 : Master : Handling Tablet 2 change-log ... 
+1623023346072 : Client W_RSt8VPcF-y-CM8AAAF : Sent Delete Cells of key A Choo 
+1623023346082 : Tablet 1 : Recieved delete Cells Query on show with title => A Choo, deleted columns: release_year 
+1623023346103 : Client W_RSt8VPcF-y-CM8AAAF : Received Query Respone 
+1623023365037 : Client W_RSt8VPcF-y-CM8AAAF : Sent Read Rows of keys A Choo 
+1623023365052 : Tablet 1 : Recieved read Rows Query on shows with titles => A Choo 
+1623023365075 : Client W_RSt8VPcF-y-CM8AAAF : Received Query Respone 
+1623023365573 : Master : Checking Balance ...  
+1623023365611 : Tablet 2 : Master Asked for the changelog 
+1623023365613 : Tablet 1 : Master Asked for the changelog 
+1623023365619 : Master : Handling Tablet 1 change-log ... 
+1623023365619 : Master : Handling Tablet 2 change-log ... 
+1623023375442 : Client hXE0QSfcpaJyyYXPAAAH : Sent Read Rows of keys A Silent Voice 
+1623023375450 : Tablet 1 : Recieved read Rows Query on shows with titles => A Silent Voice 
+1623023375485 : Client hXE0QSfcpaJyyYXPAAAH : Received Query Respone 
+1623023385573 : Master : Checking Balance ...  
+1623023385597 : Tablet 1 : Master Asked for the changelog 
+1623023385610 : Tablet 2 : Master Asked for the changelog 
+1623023385619 : Master : Handling Tablet 1 change-log ... 
+1623023385619 : Master : Handling Tablet 2 change-log ... 
+1623023387939 : Tablet 2 : Tablet Disconnected 
+1623023388044 : Master : Tablet 2 Disconnected 
+1623023388119 : Client hXE0QSfcpaJyyYXPAAAH : Received New Cache From Master 
+1623023388141 : Client W_RSt8VPcF-y-CM8AAAF : Received New Cache From Master 
+1623023388932 : Tablet 1 : Tablet Disconnected 
+1623023389004 : Master : Tablet 2 Disconnected 
+1623023389031 : Client W_RSt8VPcF-y-CM8AAAF : Client Disconnected 
+1623023389056 : Client hXE0QSfcpaJyyYXPAAAH : Received New Cache From Master 
+1623023389563 : Client hXE0QSfcpaJyyYXPAAAH : Client Disconnected 
