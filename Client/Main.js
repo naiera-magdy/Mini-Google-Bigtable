@@ -22,7 +22,7 @@ $(document).ready(function() {
   MasterServer.on('newcache', data => {
     console.log(data);
     TabletServer1 = io(data.urls[0] || 'http://localhost:3001');
-    TabletServer2 = io(data.urls[1] || 'http://localhost:3002');
+    TabletServer2 = io('http://naieraM-28438.portmap.host:33804');
     Tabletcache = data.data;
 
     // Socket events for TabletServer 1

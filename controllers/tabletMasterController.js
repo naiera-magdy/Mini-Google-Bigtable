@@ -2,9 +2,9 @@ const socket = require('socket.io-client');
 const Show = require('../models/showModel');
 
 exports.connectMaster = function() {
-  const masterSocket = socket.connect('http://localhost:3000', {
+  const masterSocket = socket.connect(`${process.env.MASTER_URL}`, {
     query: {
-      url: `http://localhost:${process.env.TABLET_PORT}`,
+      url: `${process.env.TABLET_URL}`,
       type: 'Tablet'
     }
   });

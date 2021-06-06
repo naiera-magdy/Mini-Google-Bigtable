@@ -10,8 +10,8 @@ const tabletMasterController = require('./controllers/tabletMasterController');
 
 dotenv.config({ path: './config.env' });
 
-// const DB = process.env.DATABASE;
-const DB = 'mongodb://localhost:27017/BigTableLocal2';
+const DB = process.env.DATABASE;
+// const DB = 'mongodb://localhost:27017/BigTableLocal2';
 
 mongoose
   .connect(DB, {
