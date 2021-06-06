@@ -73,6 +73,17 @@ const initialize = async function() {
     });
   }
 
+  const tabletServersMetaDataSent = [
+    {
+      Start: tabletServersMetaData[0].Start,
+      End: tabletServersMetaData[1].End
+    },
+    {
+      Start: tabletServersMetaData[2].Start,
+      End: tabletServersMetaData[3].End
+    }
+  ];
+
   while (alphabetIndex !== 26) {
     tabletServersData[3].push(...allTabletsData[alphabetIndex]);
 
@@ -81,7 +92,7 @@ const initialize = async function() {
 
   tabletServersMetaData[3].End = 'Z';
 
-  return { tabletServersData, tabletServersMetaData };
+  return { tabletServersData, tabletServersMetaDataSent };
 };
 exports.initialize = initialize;
 
@@ -132,14 +143,21 @@ exports.ServerDisconnected = async function(socket, disconnectedID) {
   // const socket = this;
   if (global.tabletServersID[0] === disconnectedID) {
     global.io.to(global.tabletServersID[1]).emit('setRows', tabletServersData);
-    tabletServersMetaData[2].Start = 'A';
-    tabletServersMetaData[3].End = 'Z';
+    tabletServersMetaData[1].Start = 'A';
+    tabletServersMetaData[1].End = 'Z';
   } else {
     global.io.to(global.tabletServersID[0]).emit('setRows', tabletServersData);
     tabletServersMetaData[0].Start = 'A';
-    tabletServersMetaData[1].End = 'Z';
+    tabletServersMetaData[0].End = 'Z';
   }
-  socket.emit('setMetaData', tabletServersMetaData);
+
+  if (global.urls[0] === socket.request._query.url) {
+    global.urls = [global.urls[1]];
+  } else {
+    global.urls = [global.urls[0]];
+  }
+
+  socket.emit('newcache', tabletServersMetaData);
 };
 
 exports.checkBalanceResponse = async function(data) {
