@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:master": "nodemon MasterServer.js",
-    "start:tablet": "nodemon TabletServer.js",
-    "start:tablet2": "nodemon TabletServer2.js"
+    "start:tablet": "nodemon TabletServer.js"
   },
   "repository": {
     "type": "git",
