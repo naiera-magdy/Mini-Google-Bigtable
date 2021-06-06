@@ -1,10 +1,11 @@
 /* eslint-disable */
-$(document).ready(function() {
+$(document).ready(function () {
   // Socket Connections
 
   let TabletServer1;
   let TabletServer2;
-  const MasterServer = io('http://localhost:3000', {
+  let NUMBER_OF_SERVERS;
+  const MasterServer = io('http://156.208.67.226:3000/', {
     query: {
       type: 'Client'
     }
@@ -21,8 +22,13 @@ $(document).ready(function() {
   // Socket events for Master
   MasterServer.on('newcache', data => {
     console.log(data);
-    TabletServer1 = io(data.urls[0] || 'http://localhost:3001');
-    TabletServer2 = io(data.urls[1] || 'http://localhost:3002');
+    NUMBER_OF_SERVERS = data.urls.length;
+    if (NUMBER_OF_SERVERS === 2) {
+      TabletServer1 = io(data.urls[0] || 'http://localhost:3001');
+      TabletServer2 = io(data.urls[1] || 'http://localhost:3002');
+    } else {
+      TabletServer1 = io(data.urls[0] || 'http://localhost:3001');
+    }
     Tabletcache = data.data;
 
     // Socket events for TabletServer 1
@@ -42,25 +48,27 @@ $(document).ready(function() {
       console.log(data);
     });
 
-    // Socket events for TabletServer 2
-    TabletServer2.on('readRows', data => {
-      console.log(data);
-    });
-    TabletServer2.on('setCells', data => {
-      console.log(data);
-    });
-    TabletServer2.on('deleteCells', data => {
-      console.log(data);
-    });
-    TabletServer2.on('deleteRow', data => {
-      console.log(data);
-    });
-    TabletServer2.on('addRow', data => {
-      console.log(data);
-    });
+    if (NUMBER_OF_SERVERS === 2) {
+      // Socket events for TabletServer 2
+      TabletServer2.on('readRows', data => {
+        console.log(data);
+      });
+      TabletServer2.on('setCells', data => {
+        console.log(data);
+      });
+      TabletServer2.on('deleteCells', data => {
+        console.log(data);
+      });
+      TabletServer2.on('deleteRow', data => {
+        console.log(data);
+      });
+      TabletServer2.on('addRow', data => {
+        console.log(data);
+      });
+    }
   });
   // Radio Button Change html dynamically
-  $('#mainChoice').change(function() {
+  $('#mainChoice').change(function () {
     let radioValue = $("input[name='options']:checked").val();
 
     $('#setrow').css('display', 'none');
@@ -72,7 +80,7 @@ $(document).ready(function() {
     $(`#${radioValue}`).css('display', 'flex');
   });
 
-  $('#setrowaddcolumn').click(function(e) {
+  $('#setrowaddcolumn').click(function (e) {
     e.preventDefault();
     $('#setrowinputs').append(
       `<div class="form-row mt-2">
@@ -86,21 +94,21 @@ $(document).ready(function() {
     );
   });
 
-  $('#deletecelladdcolumn').click(function(e) {
+  $('#deletecelladdcolumn').click(function (e) {
     e.preventDefault();
     $('#deletecellinputs').append(
       `<input type="text" class="form-control mt-2 column" placeholder="Column">`
     );
   });
 
-  $('#deleterowaddcolumn').click(function(e) {
+  $('#deleterowaddcolumn').click(function (e) {
     e.preventDefault();
     $('#deleterowinputs').append(
       `<input type="text" class="form-control mt-2 rowkey" placeholder="Row Key">`
     );
   });
 
-  $('#addrowaddcolumn').click(function(e) {
+  $('#addrowaddcolumn').click(function (e) {
     e.preventDefault();
     $('#addrowinputs').append(
       `<div class="form-row mt-2">
@@ -114,7 +122,7 @@ $(document).ready(function() {
     );
   });
 
-  $('#readrowaddcolumn').click(function(e) {
+  $('#readrowaddcolumn').click(function (e) {
     e.preventDefault();
     $('#readrowinputs').append(
       `<input type="text" class="form-control mt-2 rowkey" placeholder="Row Key">`
@@ -122,7 +130,7 @@ $(document).ready(function() {
   });
 
   // Submit button get the values of the payload
-  $('#submitbtn').click(function(e) {
+  $('#submitbtn').click(function (e) {
     e.preventDefault();
     let radioValue = $("input[name='options']:checked").val();
     let objectToSend;
@@ -131,11 +139,11 @@ $(document).ready(function() {
     if (radioValue === 'setrow') {
       let rowkey = $('#setrowkey').val();
       let columnarray = [];
-      $('#setrow .column').each(function(el) {
+      $('#setrow .column').each(function (el) {
         columnarray.push($(this).val());
       });
       let valarray = [];
-      $('#setrow .value').each(function(el) {
+      $('#setrow .value').each(function (el) {
         valarray.push($(this).val());
       });
 
@@ -143,17 +151,21 @@ $(document).ready(function() {
       objectToSend['title'] = rowkey;
       columnarray.forEach((key, i) => (objectToSend[key] = valarray[i]));
 
-      let socket =
-        rowkey[0] >= Tabletcache[0].Start && rowkey[0] <= Tabletcache[1].End
-          ? TabletServer1
-          : TabletServer2;
-      socket.emit('show:Set', objectToSend);
+      if (NUMBER_OF_SERVERS === 2) {
+        let socket =
+          rowkey[0] >= Tabletcache[0].Start && rowkey[0] <= Tabletcache[1].End
+            ? TabletServer1
+            : TabletServer2;
+        socket.emit('show:Set', objectToSend);
+      } else {
+        TabletServer1.emit('show:Set', objectToSend);
+      }
     }
     // Delete Cells
     else if (radioValue === 'deletecell') {
       let rowkey = $('#deletecellkey').val();
       let columnarray = [];
-      $('#deletecell .column').each(function(el) {
+      $('#deletecell .column').each(function (el) {
         columnarray.push($(this).val());
       });
 
@@ -161,41 +173,57 @@ $(document).ready(function() {
       objectToSend['title'] = rowkey;
       objectToSend['fields'] = [...columnarray];
 
-      let socket =
-        rowkey[0] >= Tabletcache[0].Start && rowkey[0] <= Tabletcache[1].End
-          ? TabletServer1
-          : TabletServer2;
-      socket.emit('show:DeleteCells', objectToSend);
+      if (NUMBER_OF_SERVERS === 2) {
+        let socket =
+          rowkey[0] >= Tabletcache[0].Start && rowkey[0] <= Tabletcache[1].End
+            ? TabletServer1
+            : TabletServer2;
+        socket.emit('show:Set', objectToSend);
+      } else {
+        TabletServer1.emit('show:DeleteCells', objectToSend);
+      }
     }
     // Delete Rows
     else if (radioValue === 'deleterow') {
       let tabletArray1 = [],
         tabletArray2 = [];
-      $('#deleterow .rowkey').each(function(el) {
-        if (
-          $(this).val()[0] >= Tabletcache[0].Start &&
-          $(this).val()[0] <= Tabletcache[1].End
-        ) {
+      $('#deleterow .rowkey').each(function (el) {
+
+        if (NUMBER_OF_SERVERS === 2) {
+          if (
+            $(this).val()[0] >= Tabletcache[0].Start &&
+            $(this).val()[0] <= Tabletcache[1].End
+          ) {
+            tabletArray1.push($(this).val());
+          } else tabletArray2.push($(this).val());
+        } else {
           tabletArray1.push($(this).val());
-        } else tabletArray2.push($(this).val());
+        }
       });
 
-      objectToSend = [...tabletArray1, ...tabletArray2];
+      if (NUMBER_OF_SERVERS === 2) {
+        objectToSend = [...tabletArray1, ...tabletArray2];
 
-      if (tabletArray1.length)
-        TabletServer1.emit('show:DeleteRow', tabletArray1);
-      if (tabletArray2.length)
-        TabletServer2.emit('show:DeleteRow', tabletArray2);
+        if (tabletArray1.length)
+          TabletServer1.emit('show:DeleteRow', tabletArray1);
+        if (tabletArray2.length)
+          TabletServer2.emit('show:DeleteRow', tabletArray2);
+      } else {
+        objectToSend = [...tabletArray1];
+
+        if (tabletArray1.length)
+          TabletServer1.emit('show:DeleteRow', tabletArray1);
+      }
     }
     // Add Row
     else if (radioValue === 'addrow') {
       let rowkey = $('#addrowkey').val();
       let columnarray = [];
-      $('#addrow .column').each(function(el) {
+      $('#addrow .column').each(function (el) {
         columnarray.push($(this).val());
       });
       let valarray = [];
-      $('#addrow .value').each(function(el) {
+      $('#addrow .value').each(function (el) {
         valarray.push($(this).val());
       });
 
@@ -203,31 +231,48 @@ $(document).ready(function() {
       objectToSend['title'] = rowkey;
       columnarray.forEach((key, i) => (objectToSend[key] = valarray[i]));
 
-      let socket =
-        rowkey[0] >= Tabletcache[0].Start && rowkey[0] <= Tabletcache[1].End
-          ? TabletServer1
-          : TabletServer2;
-      socket.emit('show:AddRow', objectToSend);
+      if (NUMBER_OF_SERVERS === 2) {
+        let socket =
+          rowkey[0] >= Tabletcache[0].Start && rowkey[0] <= Tabletcache[1].End
+            ? TabletServer1
+            : TabletServer2;
+        socket.emit('show:AddRow', objectToSend);
+      } else {
+        TabletServer1.emit('show:AddRow', objectToSend);
+      }
     }
     // Read Rows
     else if (radioValue === 'readrow') {
       let tabletArray1 = [],
         tabletArray2 = [];
-      $('#readrow .rowkey').each(function(el) {
-        if (
-          $(this).val()[0] >= Tabletcache[0].Start &&
-          $(this).val()[0] <= Tabletcache[1].End
-        ) {
+      $('#readrow .rowkey').each(function (el) {
+        if (NUMBER_OF_SERVERS === 2) {
+          if (
+            $(this).val()[0] >= Tabletcache[0].Start &&
+            $(this).val()[0] <= Tabletcache[1].End
+          ) {
+            tabletArray1.push($(this).val());
+          } else tabletArray2.push($(this).val());
+        } else {
           tabletArray1.push($(this).val());
-        } else tabletArray2.push($(this).val());
+        }
       });
 
-      objectToSend = [...tabletArray1, ...tabletArray2];
+      if (NUMBER_OF_SERVERS === 2) {
 
-      if (tabletArray1.length)
-        TabletServer1.emit('show:ReadRows', tabletArray1);
-      if (tabletArray2.length)
-        TabletServer2.emit('show:ReadRows', tabletArray2);
+        objectToSend = [...tabletArray1, ...tabletArray2];
+
+        if (tabletArray1.length)
+          TabletServer1.emit('show:ReadRows', tabletArray1);
+        if (tabletArray2.length)
+          TabletServer2.emit('show:ReadRows', tabletArray2);
+      } else {
+        objectToSend = [...tabletArray1];
+
+        if (tabletArray1.length)
+          TabletServer1.emit('show:DeleteRow', tabletArray1);
+      }
+
     }
 
     // Display response page
@@ -272,7 +317,7 @@ $(document).ready(function() {
   });
 
   // Add events
-  $('#restart').click(function() {
+  $('#restart').click(function () {
     $('#response').css('display', 'none');
     $('#main').css('display', 'flex');
   });
