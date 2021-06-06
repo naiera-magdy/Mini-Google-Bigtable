@@ -321,7 +321,7 @@ $(document).ready(function () {
         objectToSend = [...tabletArray1];
 
         if (tabletArray1.length)
-          TabletServer1.emit('show:DeleteRow', tabletArray1);
+          TabletServer1.emit('show:ReadRows', tabletArray1);
       }
 
 
