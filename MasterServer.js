@@ -45,17 +45,17 @@ global.io.on('connection', async soc => {
   // console.log(soc.request._query.url);
   console.log(`User connected from socket id = ${soc.id}`);
   if (soc.request._query.type === 'Client') {
-    master.handleLogs(true, 'Sending Met-Data');
+    master.handleLogs(true, 'Sending Met-Data', soc);
     global.io.emit('newcache', {
       urls: global.urls,
-      data: tabletServerInit.tabletServersMetaData
+      data: tabletServerInit.tabletServersMetaDataSent
     });
   } else {
     global.tabletServersID.push(soc.id);
     global.urls.push(soc.request._query.url);
     global.serverCount++;
     if (global.serverCount === 2) {
-      master.handleLogs(true, 'Sending Data');
+      master.handleLogs(true, 'Sending Data', soc);
       global.io
         .to(global.tabletServersID[0])
         .emit('setRows', tabletServerInit.tabletServersData.slice(0, 2));
@@ -69,12 +69,14 @@ global.io.on('connection', async soc => {
     const s = this;
     if (s.request._query.type === 'Tablet') {
       global.serverCount--;
+      global.urls.splice(global.urls.indexOf(s.request._query.url), 1);
+      global.tabletServersID.splice(global.tabletServersID.indexOf(s.id), 1);
       master.ServerDisconnected(s, soc.id);
     }
   });
 
   soc.on('logs', function(logString) {
-    master.handleLogs(false, logString);
+    master.handleLogs(false, logString, soc);
   });
 });
 
