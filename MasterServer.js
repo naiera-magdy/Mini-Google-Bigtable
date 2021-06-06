@@ -38,19 +38,19 @@ server.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
 
-const urls = [];
+global.urls = [];
 global.io.on('connection', async soc => {
   soc.on('checkBalanceResponse', master.checkBalanceResponse);
   // console.log(soc.request._query.url);
   console.log(`User connected from socket id = ${soc.id}`);
   if (soc.request._query.type === 'Client') {
     global.io.emit('newcache', {
-      urls,
+      urls: global.urls,
       data: tabletServerInit.tabletServersMetaData
     });
   } else {
     global.tabletServersID.push(soc.id);
-    urls.push(soc.request._query.url);
+    global.urls.push(soc.request._query.url);
     global.serverCount++;
     if (global.serverCount === 2) {
       // console.log(tabletServerInit);
