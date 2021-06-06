@@ -23,6 +23,7 @@ mongoose
   .then(async () => {
     console.log('DB connection successful!');
     tabletServerInit = await master.initialize();
+    master.handleLogs(true, 'Initialized');
   })
   .catch(err => console.log(err));
 
@@ -44,6 +45,7 @@ global.io.on('connection', async soc => {
   // console.log(soc.request._query.url);
   console.log(`User connected from socket id = ${soc.id}`);
   if (soc.request._query.type === 'Client') {
+    master.handleLogs(true, 'Sending Met-Data');
     global.io.emit('newcache', {
       urls: global.urls,
       data: tabletServerInit.tabletServersMetaData
@@ -53,7 +55,7 @@ global.io.on('connection', async soc => {
     global.urls.push(soc.request._query.url);
     global.serverCount++;
     if (global.serverCount === 2) {
-      // console.log(tabletServerInit);
+      master.handleLogs(true, 'Sending Data');
       global.io
         .to(global.tabletServersID[0])
         .emit('setRows', tabletServerInit.tabletServersData.slice(0, 2));
@@ -69,6 +71,10 @@ global.io.on('connection', async soc => {
       global.serverCount--;
       master.ServerDisconnected(s, soc.id);
     }
+  });
+
+  soc.on('logs', function(logString) {
+    master.handleLogs(false, logString);
   });
 });
 
