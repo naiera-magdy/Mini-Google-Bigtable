@@ -12,11 +12,13 @@ exports.setCells = async function(data) {
     delete data['title'];
     // console.log(data);
     const res = await Show.updateOne({ title: id }, data);
-    global.GLOBAL_CHANGELOG.push({
-      type: 'update',
-      title: id,
-      data
-    });
+    if (res.nModified >= 0) {
+      global.GLOBAL_CHANGELOG.push({
+        type: 'update',
+        title: id,
+        data
+      });
+    }
     console.log(global.GLOBAL_CHANGELOG);
     socket.emit('setCells', res);
   } catch (err) {
@@ -45,13 +47,15 @@ exports.deleteCells = async function(data) {
     // console.log(fields);
 
     const res = await Show.updateOne({ title: id }, { $unset: fields });
-    global.GLOBAL_CHANGELOG.push({
-      type: 'update',
-      title: id,
-      data: {
-        $unset: fields
-      }
-    });
+    if (res.nModified >= 0) {
+      global.GLOBAL_CHANGELOG.push({
+        type: 'update',
+        title: id,
+        data: {
+          $unset: fields
+        }
+      });
+    }
     console.log(global.GLOBAL_CHANGELOG);
     socket.emit('deleteCells', res);
   } catch (err) {
@@ -68,10 +72,12 @@ exports.deleteRow = async function(ids) {
   const socket = this;
   try {
     const res = await Show.deleteMany({ title: ids });
-    global.GLOBAL_CHANGELOG.push({
-      type: 'delete',
-      title: ids
-    });
+    if (res.deletedCount >= 0) {
+      global.GLOBAL_CHANGELOG.push({
+        type: 'delete',
+        title: ids
+      });
+    }
     console.log(global.GLOBAL_CHANGELOG);
     socket.emit('deleteRow', res);
   } catch (err) {
