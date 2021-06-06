@@ -215,7 +215,7 @@ $(document).ready(function () {
           rowkey[0] >= Tabletcache[0].Start && rowkey[0] <= Tabletcache[0].End
             ? TabletServer1
             : TabletServer2;
-        socket.emit('show:Set', objectToSend);
+        socket.emit('show:DeleteCells', objectToSend);
       } else {
         TabletServer1.emit('show:DeleteCells', objectToSend);
       }
