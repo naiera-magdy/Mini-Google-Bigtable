@@ -6,16 +6,17 @@ global.GLOBAL_CHANGELOG = [];
 exports.setCells = async function(data) {
   const socket = this;
   try {
-    const id = data.show_id;
+    const id = data.title;
     // eslint-disable-next-line dot-notation
-    delete data['show_id'];
+    delete data['title'];
     // console.log(data);
-    const res = await Show.updateOne({ show_id: id }, data);
+    const res = await Show.updateOne({ title: id }, data);
     global.GLOBAL_CHANGELOG.push({
       type: 'update',
-      show_id: id,
+      title: id,
       data
     });
+    console.log(global.GLOBAL_CHANGELOG);
     socket.emit('setCells', res);
   } catch (err) {
     console.log(err);
@@ -26,9 +27,9 @@ exports.setCells = async function(data) {
 exports.deleteCells = async function(data) {
   const socket = this;
   try {
-    const id = data.show_id;
+    const id = data.title;
     // eslint-disable-next-line dot-notation
-    delete data['show_id'];
+    delete data['title'];
     const fields = {};
     // eslint-disable-next-line no-restricted-syntax
     for (const field of data.fields) {
@@ -36,14 +37,15 @@ exports.deleteCells = async function(data) {
     }
     // console.log(fields);
 
-    const res = await Show.updateOne({ show_id: id }, { $unset: fields });
+    const res = await Show.updateOne({ title: id }, { $unset: fields });
     global.GLOBAL_CHANGELOG.push({
       type: 'update',
-      show_id: id,
+      title: id,
       data: {
         $unset: fields
       }
     });
+    console.log(global.GLOBAL_CHANGELOG);
     socket.emit('deleteCells', res);
   } catch (err) {
     console.log(err);
@@ -54,11 +56,12 @@ exports.deleteCells = async function(data) {
 exports.deleteRow = async function(ids) {
   const socket = this;
   try {
-    const res = await Show.deleteMany({ show_id: ids });
+    const res = await Show.deleteMany({ title: ids });
     global.GLOBAL_CHANGELOG.push({
       type: 'delete',
-      show_id: ids
+      title: ids
     });
+    console.log(global.GLOBAL_CHANGELOG);
     socket.emit('deleteRow', res);
   } catch (err) {
     console.log(err);
@@ -72,9 +75,10 @@ exports.addRow = async function(data) {
     const res = await Show.create(data);
     global.GLOBAL_CHANGELOG.push({
       type: 'insert',
-      show_id: data.show_id,
+      title: data.title,
       data
     });
+    console.log(global.GLOBAL_CHANGELOG);
     socket.emit('addRow', res);
   } catch (err) {
     console.log(err);
@@ -88,7 +92,8 @@ exports.addRow = async function(data) {
 exports.readRow = async function(id) {
   const socket = this;
   try {
-    const data = await Show.find({ show_id: id });
+    console.log(id);
+    const data = await Show.find({ title: id });
     socket.emit('readRows', data);
     console.log(global.GLOBAL_CHANGELOG);
   } catch (err) {

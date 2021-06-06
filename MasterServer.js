@@ -10,8 +10,9 @@ dotenv.config({ path: './config.env' });
 
 const DB = process.env.DATABASE;
 
-let serverCount = 0;
+global.serverCount = 0;
 
+let tabletServerInit;
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
@@ -19,40 +20,55 @@ mongoose
     useFindAndModify: false,
     useUnifiedTopology: true
   })
-  .then(() => console.log('DB connection successful!'))
+  .then(async () => {
+    console.log('DB connection successful!');
+    tabletServerInit = await master.initialize();
+  })
   .catch(err => console.log(err));
 
 const port = process.env.MASTER_PORT || 3000;
 const server = http.createServer(app);
-const io = socket(server);
+global.io = socket(server, {
+  cors: {
+    origin: '*'
+  }
+});
 
 server.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
 
-const tabletServerInit = master.initialize();
-
-io.on('connection', async soc => {
+const urls = [];
+global.io.on('connection', async soc => {
+  soc.on('checkBalanceResponse', master.checkBalanceResponse);
+  // console.log(soc.request._query.url);
   console.log(`User connected from socket id = ${soc.id}`);
   if (soc.request._query.type === 'Client') {
-    io.emit('newcache', tabletServerInit.tabletServersMetaData);
+    global.io.emit('newcache', {
+      urls,
+      data: tabletServerInit.tabletServersMetaData
+    });
   } else {
-    master.tabletServersID.push(soc.id);
-    serverCount++;
-    if (serverCount === 2) {
-      io.to(master.tabletServersID[0]).emit(
-        'setRows',
-        tabletServerInit.tabletServersData.slice(0, 1)
-      );
-      io.to(master.tabletServersID[1]).emit(
-        'setRows',
-        tabletServerInit.tabletServersData.slice(2, 3)
-      );
+    global.tabletServersID.push(soc.id);
+    urls.push(soc.request._query.url);
+    global.serverCount++;
+    if (global.serverCount === 2) {
+      // console.log(tabletServerInit);
+      global.io
+        .to(global.tabletServersID[0])
+        .emit('setRows', tabletServerInit.tabletServersData.slice(0, 2));
+      global.io
+        .to(global.tabletServersID[1])
+        .emit('setRows', tabletServerInit.tabletServersData.slice(2, 4));
     }
   }
 
   soc.on('disconnect', function() {
-    master.ServerDisconnected(soc.id);
+    const s = this;
+    if (s.request._query.type === 'Tablet') {
+      global.serverCount--;
+      master.ServerDisconnected(s, soc.id);
+    }
   });
 });
 
@@ -63,3 +79,5 @@ process.on('unhandledRejection', err => {
     process.exit(1);
   });
 });
+
+master.CheckServersBalancePeriodically();

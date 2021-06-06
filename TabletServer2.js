@@ -11,7 +11,7 @@ const tabletMasterController = require('./controllers/tabletMasterController');
 dotenv.config({ path: './config.env' });
 
 // const DB = process.env.DATABASE;
-const DB = 'mongodb://localhost:27017/BigTableLocal';
+const DB = 'mongodb://localhost:27017/BigTableLocal2';
 
 mongoose
   .connect(DB, {
@@ -23,7 +23,7 @@ mongoose
   .then(() => console.log('DB connection successful!'))
   .catch(err => console.log(err));
 
-const port = process.env.TABLET_PORT || 3001;
+const port = process.env.TABLET_PORT || 3002;
 const server = http.createServer(app);
 const io = socket(server, {
   cors: {

@@ -42,8 +42,8 @@ const alphabets = [
   'Z'
 ];
 
-exports.initialize = async function() {
-  const data = await Show.find({}).sort('title');
+const initialize = async function() {
+  const data = await Show.find({}, { _id: 0 }).sort('title');
 
   let totalLengthMovies = 0;
   for (let i = 0; i < alphabets.length; i++) {
@@ -83,33 +83,29 @@ exports.initialize = async function() {
 
   return { tabletServersData, tabletServersMetaData };
 };
+exports.initialize = initialize;
 
-exports.handleServerRequsets = async function(data) {
+const handleServerRequsets = async function(data) {
   // Delete operation
   for (const show of data) {
     switch (show.type) {
       case 'delete':
-        for (const showid in show.show_id) {
-          try {
-            const res = await Show.findOneAndRemove({ show_id: showid });
-          } catch (err) {
-            console.log(err);
-          }
+        try {
+          await Show.deleteMany({ title: show.title });
+        } catch (err) {
+          console.log(err);
         }
         break;
       case 'update':
         try {
-          const res = await Show.updateOne(
-            { show_id: show.show_id },
-            show.data
-          );
+          await Show.updateOne({ title: show.title }, show.data);
         } catch (err) {
           console.log(err);
         }
         break;
       default:
         try {
-          const res = await Show.create(show.data);
+          await Show.create(show.data);
         } catch (err) {
           console.log(err);
         }
@@ -118,45 +114,50 @@ exports.handleServerRequsets = async function(data) {
   }
 };
 
-exports.CheckServersBalancePeriodically = async function() {
-  const socket = this;
+let counter = 0;
+let data2;
 
+exports.CheckServersBalancePeriodically = async function() {
   setInterval(async function() {
-    let counter = 0;
-    let data2;
-    if (socket.engine.clientsCount === 2) {
-      socket.to(tabletServersID[0]).emit('checkBalance');
-      socket.to(tabletServersID[1]).emit('checkBalance');
-      socket.on('checkBalanceResponse', async data => {
-        counter++;
-        if (counter === 1) {
-          data2 = data;
-        }
-        if (counter === 2) {
-          await handleServerRequsets(data2.changelog);
-          await handleServerRequsets(data.changelog);
-          if (
-            data.total_count / data2.total_count < 0.5 ||
-            data.total_count / data2.total_count > 2
-          ) {
-            initialize();
-          }
-        }
-      });
+    console.log('check Balance');
+    if (global.serverCount === 2) {
+      counter = 0;
+      global.io.to(global.tabletServersID[0]).emit('checkBalance');
+      global.io.to(global.tabletServersID[1]).emit('checkBalance');
     }
-  }, 10000);
+  }, 20000);
 };
 
-exports.ServerDisconnected = async function(disconnectedID) {
-  const socket = this;
-  if (tabletServersID[0] === disconnectedID) {
-    socket.to(tabletServersID[1]).emit('setRows', tabletServersData);
-    tabletServersMetaData[2].start = 'A';
-    tabletServersMetaData[3].end = 'Z';
+exports.ServerDisconnected = async function(socket, disconnectedID) {
+  // const socket = this;
+  if (global.tabletServersID[0] === disconnectedID) {
+    global.io.to(global.tabletServersID[1]).emit('setRows', tabletServersData);
+    tabletServersMetaData[2].Start = 'A';
+    tabletServersMetaData[3].End = 'Z';
   } else {
-    socket.to(tabletServersID[0]).emit('setRows', tabletServersData);
-    tabletServersMetaData[0].start = 'A';
-    tabletServersMetaData[1].end = 'Z';
+    global.io.to(global.tabletServersID[0]).emit('setRows', tabletServersData);
+    tabletServersMetaData[0].Start = 'A';
+    tabletServersMetaData[1].End = 'Z';
   }
   socket.emit('setMetaData', tabletServersMetaData);
+};
+
+exports.checkBalanceResponse = async function(data) {
+  counter++;
+  console.log(counter);
+  if (counter === 1) {
+    data2 = data;
+  }
+  if (counter === 2) {
+    console.log(data.changelog);
+    console.log(data2.changelog);
+    await handleServerRequsets(data2.changelog);
+    await handleServerRequsets(data.changelog);
+    if (
+      data.total_count / data2.total_count < 0.5 ||
+      data.total_count / data2.total_count > 2
+    ) {
+      initialize();
+    }
+  }
 };
