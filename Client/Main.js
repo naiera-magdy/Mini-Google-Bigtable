@@ -211,8 +211,7 @@ $(document).ready(function () {
       objectToSend['fields'] = [...columnarray];
 
       if (NUMBER_OF_SERVERS === 2) {
-        let socket =
-          rowkey >= rowkey <= Tabletcache[0].End
+        let socket = rowkey <= Tabletcache[0].End
             ? TabletServer1
             : TabletServer2;
         socket.emit('show:DeleteCells', objectToSend);
