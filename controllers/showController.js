@@ -10,7 +10,7 @@ exports.setCells = async function(data) {
   try {
     // eslint-disable-next-line dot-notation
     delete data['title'];
-    // console.log(data);
+
     const res = await Show.updateOne({ title: id }, data);
     if (res.nModified >= 0) {
       global.GLOBAL_CHANGELOG.push({
@@ -44,7 +44,6 @@ exports.deleteCells = async function(data) {
     for (const field of data.fields) {
       fields[field] = 1;
     }
-    // console.log(fields);
 
     const res = await Show.updateOne({ title: id }, { $unset: fields });
     if (res.nModified >= 0) {

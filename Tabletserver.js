@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const http = require('http');
 const socket = require('socket.io');
-// const Show = require('./models/showModel');
 
 const app = require('./app');
 const showController = require('./controllers/showController');
@@ -11,7 +10,6 @@ const tabletMasterController = require('./controllers/tabletMasterController');
 dotenv.config({ path: './config.env' });
 
 const DB = process.env.DATABASE;
-// const DB = 'mongodb://localhost:27017/BigTableLocal';
 
 mongoose
   .connect(DB, {
